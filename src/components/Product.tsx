@@ -3,13 +3,16 @@ import React from "react";
 import { HeartIcon } from "react-native-heroicons/outline";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Product as P } from "../types/type";
+
+import { imgProductDefault } from "../utils/imageDefault";
+import { IProduct } from "../types/type";
 
 type Props = {
   name: string;
-  item: P;
+  item: IProduct;
+  user: any;
 };
-const Product = ({ name, item }: Props) => {
+const Product = ({ name, item }: any) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   return (
@@ -17,24 +20,24 @@ const Product = ({ name, item }: Props) => {
       key={item._id}
       className={`bg-white ${
         name === "Home" ? "w-[180px]" : "w-[170px]"
-      } h-[252px] rounded-[30px] mr-10 relative`}
+      } h-[352px] rounded-[30px] mr-10 relative`}
     >
       <TouchableOpacity
         onPress={() => navigation.navigate("Detail", { id: item._id })}
       >
         <Image
           source={{
-            uri: item.images[0] && item.images[0],
+            uri: imgProductDefault.uri,
           }}
           style={{
             width: 140,
-            height: 120,
+            height: 180,
           }}
-          className={`rounded-[20px] absolute top-[-20px] ${
+          className={`rounded-[20px] absolute top-[10px] ${
             name === "Home" ? "left-5" : "left-[15px]"
           }`}
         />
-        <View className="mt-[110px] flex flex-col items-center justify-center">
+        <View className="mt-[210px] flex flex-col items-center justify-center">
           <Text className="font-bold">
             {item.name.length > 20 ? item.name.slice(0, 20) + "..." : item.name}
           </Text>

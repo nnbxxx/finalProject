@@ -1,7 +1,5 @@
 // User API
-
-import axios from "axios";
-import { IAccount, IBackendRes, SignIn, SignUp } from "../types/type";
+import { IAccount, IBackendRes, ICategory, IModelPaginate, IProduct, SignIn, SignUp } from "../types/type";
 import instance from "../utils/axios-customize";
 
 export const userLogin = (user: SignIn) => {
@@ -31,4 +29,10 @@ export const userRetryPassword = (email: string) => {
 export const userChangePassword = (email: string, code: string, password: string, newPassword: string) => {
     return instance.post<IBackendRes<any>>("auth/retry-password", { email, code, password, newPassword })
 }
+export const callFetchListProduct = (query: string) => {
+    return instance.get<IBackendRes<IModelPaginate<IProduct>>>(`products?populate=category&fields=category.name&${query}`);
+}
+export const callFetchListCategory = (query: string) => {
 
+    return instance.get<IBackendRes<IModelPaginate<ICategory>>>(`categories${query}`);
+}

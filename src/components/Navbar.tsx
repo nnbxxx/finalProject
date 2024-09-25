@@ -6,17 +6,23 @@ import {
   QueueListIcon,
   UserIcon,
 } from "react-native-heroicons/outline";
-import { ParamListBase, useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { User } from "../types/type";
 
 type Props = {
   name: string;
 };
+
 const Navbar = ({ name }: Props) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<User>();
   const [token, setToken] = useState<string | null>(null);
   useEffect(() => {
     const getToken = async () => {
@@ -43,18 +49,20 @@ const Navbar = ({ name }: Props) => {
   };
 
   return (
-    <View className="bg-white w-full absolute bottom-[-40px] h-20 flex flex-row items-center justify-between px-[50px] rounded-t-[30px] drop-shadow-navbar">
+    <View className="bg-white absolute bottom-0 right-0 left-0 h-20 flex flex-row items-center justify-between px-[50px] rounded-t-[30px] z-50">
       <TouchableOpacity onPress={() => navigation.navigate("Home")}>
         <HomeIcon color={`${name === "Home" ? "#33A0FF" : "#ADADAF"}`} />
       </TouchableOpacity>
-      <TouchableOpacity>
-        <HeartIcon color={`${name === "Heart" ? "#33A0FF" : "#ADADAF"}`} />
+      <TouchableOpacity onPress={() => navigation.navigate("Favorite")}>
+        <HeartIcon color={`${name === "Favorites" ? "#33A0FF" : "#ADADAF"}`} />
       </TouchableOpacity>
       <TouchableOpacity onPress={check}>
         <UserIcon color={`${name === "Profile" ? "#33A0FF" : "#ADADAF"}`} />
       </TouchableOpacity>
-      <TouchableOpacity>
-        <QueueListIcon color={`${name === "Cart" ? "#33A0FF" : "#ADADAF"}`} />
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Order", { user: profile?._id })}
+      >
+        <QueueListIcon color={`${name === "Orders" ? "#33A0FF" : "#ADADAF"}`} />
       </TouchableOpacity>
     </View>
   );

@@ -11,7 +11,6 @@ type Props = {
   profile: User;
 };
 const ProfileInfo = ({ profile }: Props) => {
-  console.log("🚀 ~ ProfileInfo ~ profile:", profile);
   return (
     <View className="w-full h-[227px] flex flex-row items-end pt-[16px] pb-10 bg-white rounded-[20px]">
       <Image
@@ -19,23 +18,6 @@ const ProfileInfo = ({ profile }: Props) => {
         style={{ width: 80, height: 80 }}
         className="rounded-[10px] mx-[10px] my-[50px]"
       />
-      {/* <View className="flex flex-1 flex-col items-center justify-center">
-        <Text className="font-medium text-base">{profile.fullName}</Text>
-        <View className="flex flex-1 flex-col items-center justify-center w-full">
-          <View className="border-b w-full">
-            <Text className="text-center my-[10px]">{profile.email}</Text>
-          </View>
-          <View className="border-b w-full">
-            <Text className="text-center my-[10px]">{profile.gender}</Text>
-          </View>
-          <View className="border-b w-full">
-            <Text className="text-center my-[10px]">{profile.age}</Text>
-          </View>
-          <View className="border-b w-full">
-            <Text className="text-center my-[10px]">{profile.address}</Text>
-          </View>
-        </View>
-      </View> */}
       <View className="flex flex-1 flex-col items-center justify-center">
         <View className="flex flex-1 flex-col items-center justify-center w-full">
           <View className="border-b w-full">

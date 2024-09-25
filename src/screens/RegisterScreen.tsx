@@ -31,7 +31,29 @@ const RegisterScreen = () => {
     setUser((prev) => ({ ...prev, [field]: value }));
   };
   const handleSubmit = async () => {
-    console.log("🚀 ~ handleSubmit ~ user:", user);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(user.email)) {
+      Toast.show({
+        type: "error",
+        text1: "Not Email",
+      });
+      return;
+    }
+
+    if (
+      user.address === "" ||
+      user.age === "" ||
+      user.email === "" ||
+      user.gender === "" ||
+      user.name === "" ||
+      user.password === ""
+    ) {
+      Toast.show({
+        type: "error",
+        text1: "Please complete all information",
+      });
+      return;
+    }
     const res: any = await userSignup({ ...user, gender: checked });
     if (res && res.data) {
       Toast.show({

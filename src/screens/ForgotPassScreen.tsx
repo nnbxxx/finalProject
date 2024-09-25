@@ -43,7 +43,7 @@ const ForgotPassScreen = () => {
       <View className="relative h-screen">
         <View className="relative w-full h-[380px] bg-white rounded-b-[30px] flex flex-col justify-center items-center">
           <View>
-            <Text className="text-5xl text-main">Sneakers</Text>
+            <Text className="text-5xl text-main">Cloths</Text>
             <Text className="text-5xl text-main">for Everyone</Text>
           </View>
           <View className=" absolute flex flex-row items-center justify-between bottom-0">

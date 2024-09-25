@@ -5,6 +5,15 @@ export interface IBackendRes<T> {
     statusCode: number | string;
     data?: T;
 }
+export interface IModelPaginate<T> {
+    meta: {
+        current: number;
+        pageSize: number;
+        pages: number;
+        total: number;
+    },
+    result: T[]
+}
 export interface IAccount {
     access_token: string;
     user: {
@@ -14,6 +23,26 @@ export interface IAccount {
         role: string
     }
 }
+export interface IProduct {
+    _id?: string;
+    name: string;
+    category?: string;
+    brand?: string;
+    price?: string | number;
+    description?: string;
+    shopName?: string;
+    rating?: string;
+    image?: any;
+    createdBy?: string;
+    isDeleted?: boolean;
+    deletedAt?: boolean | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+export interface ICategory {
+    _id?: string;
+    name: string;
+};
 
 export type SignIn = {
     username: string;
@@ -47,26 +76,7 @@ export type updateEmail = {
     newEmail: string;
 };
 
-export type Category = {
-    _id?: string;
-    name: string;
-    img: string;
-};
 
-export type Product = {
-    _id: string;
-    name: string;
-    images: string[];
-    desc: string;
-    category: Category;
-    brand: string;
-    price: number;
-    rating?: number;
-    sold?: number;
-    status?: string;
-    variant: Variant;
-    isStock?: boolean;
-};
 
 export type Variant = {
     listColor: string[];
@@ -85,6 +95,7 @@ export type Address = {
     specific: string;
     default: boolean;
 };
+
 
 export type AddressLess = {
     user: string;
@@ -116,6 +127,7 @@ export type ItemCart = {
     size: string;
     quantity: number;
     price: number;
+    selected?: boolean;
 };
 
 export type Cart = {
@@ -200,4 +212,17 @@ export type findProduct = {
 export type orderStatus = {
     status: string;
     user: string;
+};
+export type RVariant = {
+    size: number;
+    color: string;
+    quantity: number;
+};
+export type upUser = {
+    user: string;
+    email: string;
+    fullName: string;
+    gender: string;
+    birthDay: string;
+    phone: string;
 };

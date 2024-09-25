@@ -4,6 +4,7 @@ import {
   Touchable,
   TouchableOpacity,
   ScrollView,
+  useWindowDimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,7 +12,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "react-native-heroicons/outline";
-// import ProfileInfo from "../components/ProfileInfo";
+
 import Navbar from "../components/Navbar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -19,11 +20,11 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
+import { User } from "../types/type";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { User } from "../types/type";
-import ProfileInfo from "../components/ProfileInfor";
 import { userLogout } from "../api/api";
+import ProfileInfo from "../components/ProfileInfor";
 
 type RouteParams = {
   profile: User;
@@ -33,6 +34,9 @@ const ProfileScreen = () => {
   const route = useRoute();
 
   const { profile } = route.params as RouteParams;
+
+  const { height } = useWindowDimensions();
+  const modifiedHeight = height + 36;
 
   const handleLogout = async () => {
     const res = await userLogout();
@@ -52,7 +56,7 @@ const ProfileScreen = () => {
     }
   };
   return (
-    <SafeAreaView className="h-screen bg-background">
+    <SafeAreaView className="bg-background" style={{ height: modifiedHeight }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex flex-col items-center justify-center p-10">
           <View className="flex flex-row items-center mb-10">
@@ -65,7 +69,7 @@ const ProfileScreen = () => {
             <Text className="font-medium text-lg flex-1">Personal details</Text>
             <Text className="text-main">Change</Text>
           </View>
-          <View className="mt-[15px] mb-[40px] mr-[-25px] ml-[-20px]">
+          <View className="mt-[10px] mb-[30px]">
             <ProfileInfo profile={profile} />
           </View>
           <View className="flex flex-col gap-[14px]">
