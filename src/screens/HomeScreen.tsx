@@ -63,25 +63,16 @@ const HomeScreen = () => {
     };
     getProfile();
   }, []);
-  // const handleKeyPress = ({
-  //   nativeEvent,
-  // }: {
-  //   nativeEvent: { key: string };
-  // }) => {
-  //   if (nativeEvent.key === "Enter") {
-  //     performSearch();
-  //   }
-  // };
+
   const performSearch = () => {
-    console.log("🚀 ~ performSearch ~ keyword:", keyword);
-    navigation.navigate("Search", { keyword: keyword });
+    navigation.navigate("Search", { keyword, user });
     Keyboard.dismiss();
   };
 
   const { height } = useWindowDimensions();
   const modifiedHeight = height + 36;
   const fetchListCategory = async () => {
-    const data: any = await callFetchListCategory("?current=1&pageSize=1000");
+    const data: any = await callFetchListCategory("current=1&pageSize=1000");
     if (data && data.data) {
       setCategory(data.data.result);
     } else {
@@ -108,11 +99,24 @@ const HomeScreen = () => {
       console.log("🚀 ~ fetchListItems ~ dataHot:", dataHot);
     }
   };
+  const fetchListItemByCategory = async (id: string) => {
+    const data: any = await callFetchListProduct(
+      `current=1&pageSize=999&sort=-createdAt&category=${id}`
+    );
 
+    if (data && data.data) {
+      setItems(data.data.result);
+    } else {
+      console.log("🚀 ~ fetchListItems ~ data:", data);
+    }
+  };
   useEffect(() => {
     fetchListItems();
     fetchListCategory();
   }, []);
+  useEffect(() => {
+    fetchListItemByCategory(cateId);
+  }, [cateId]);
   const handleChange = (id: string, index: number) => {
     setCateId(id);
     setActive(index);
@@ -120,6 +124,7 @@ const HomeScreen = () => {
   const handleMoveCart = () => {
     navigation.navigate("Cart", { user: user });
   };
+
   return (
     <SafeAreaView className="relative" style={{ height: modifiedHeight }}>
       <ScrollView
@@ -193,7 +198,12 @@ const HomeScreen = () => {
           </ScrollView>
           <View className="mt-[30px] pl-10">
             <View className="pr-5 mb-[5px]">
-              <Text className="text-xs text-main text-right">
+              <Text
+                className="text-xs text-main text-right"
+                onPress={() => {
+                  fetchListItems();
+                }}
+              >
                 See more &gt;
               </Text>
             </View>

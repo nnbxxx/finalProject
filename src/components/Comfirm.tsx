@@ -103,7 +103,7 @@ const Comfirm = ({ rVariant, listVariant, id, item, user }: Props) => {
       <View className="p-5">
         <View className="w-full border-b border-gray1 pb-[10px]">
           <Text className="text-center font-bold text-base">
-            Nike Air Force 1
+            Tên Sản Phẩm .....
           </Text>
         </View>
         <View className="py-5 px-10">

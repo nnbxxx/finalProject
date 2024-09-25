@@ -12,6 +12,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { imgProductDefault } from "../utils/imageDefault";
 
 type Props = {
   index: number;
@@ -44,10 +45,10 @@ const Image = ({ index, x, item }: Props) => {
   return (
     <View
       style={[styles.itemContainer, { width: SCREEN_WIDTH }]}
-      className="p-[10px]"
+      className="p-[50px]"
     >
       <Animated.View style={lottieAnimationStyle}>
-        <I source={{ uri: item }} style={[styles.image]} />
+        <I source={{ uri: imgProductDefault.uri }} style={[styles.image]} />
       </Animated.View>
       {/* <Text style={[styles.itemText, { color: item.textColor }]}>{item.text}</Text> */}
     </View>
@@ -63,9 +64,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    // padding: 10,
-    width: 350,
-    height: 350,
+    margin: 40,
+    padding: 20,
+    width: 250,
+    height: 380,
     borderRadius: 20,
   },
 });

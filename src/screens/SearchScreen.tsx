@@ -25,6 +25,7 @@ import MasonryList from "@react-native-seoul/masonry-list";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Loading from "../components/Loading";
 import { IProduct } from "../types/type";
+import { callFetchListProduct } from "../api/api";
 
 type RouteParams = {
   keyword: string;
@@ -41,14 +42,13 @@ const SearchScreen = () => {
   const [load, setLoad] = useState<boolean>(false);
 
   const performSearch = () => {
-    // console.log('Perform search with:', searchText);
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [
           {
             name: "Search",
-            params: { keyword: keyword },
+            params: { keyword: keyword2 },
           },
         ],
       })
@@ -58,23 +58,22 @@ const SearchScreen = () => {
 
   const { height } = useWindowDimensions();
   const modifiedHeight = height + 36;
+  const fetchProductByKeyWord = async (keyword: string) => {
+    const data: any = await callFetchListProduct(
+      `current=1&pageSize=999&name=/${keyword}/i`
+    );
+    if (data && data.data) {
+      setItems(data.data.result);
+    } else {
+      console.log("🚀 ~ fetchListItems ~ data:", data);
+    }
+  };
 
   useEffect(() => {
-    // try {
-    //   const fetchItem = async () => {
-    //     const { data } = await axios.get(
-    //       `/products/find/by-keyword?keyword=${keyword}&sort=pASC&pageSize=10&pageNumber=1`
-    //     );
-    //     if (data.success) {
-    //       setItems(data.data);
-    //     }
-    //     console.log(data);
-    //   };
-    //   fetchItem();
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  }, [keyword]);
+    console.log("Perform search with keyword:", keyword);
+    fetchProductByKeyWord(keyword2);
+  }, [keyword2]);
+
   return (
     <SafeAreaView>
       <ScrollView
@@ -89,7 +88,7 @@ const SearchScreen = () => {
             <TextInput
               className="text-gray1 flex-1"
               // onKeyPress={handleKeyPress}
-              placeholder="Women"
+              placeholder="Search Somethings"
               value={keyword2}
               onChangeText={setKeyword2}
             ></TextInput>

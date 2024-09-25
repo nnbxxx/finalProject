@@ -97,7 +97,7 @@ const CheckoutScreen = () => {
               <FlatList
                 data={data}
                 renderItem={({ item }) => (
-                  //   <CartItem data={item} {...unProps} type="Checkout" />
+                  // <CartItem data={item} {...unProps} type="Checkout" />
                   <CartItem />
                 )}
                 showsVerticalScrollIndicator={false}

@@ -34,5 +34,8 @@ export const callFetchListProduct = (query: string) => {
 }
 export const callFetchListCategory = (query: string) => {
 
-    return instance.get<IBackendRes<IModelPaginate<ICategory>>>(`categories${query}`);
+    return instance.get<IBackendRes<IModelPaginate<ICategory>>>(`categories?${query}`);
+}
+export const callFetchProductById = (id: string) => {
+    return instance.get<IBackendRes<IProduct>>(`products/${id}`);
 }

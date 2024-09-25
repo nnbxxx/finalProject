@@ -29,6 +29,7 @@ import { useRoute } from "@react-navigation/native";
 import Comfirm from "../components/Comfirm";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { imgProductDefault } from "../utils/imageDefault";
+import { callFetchProductById } from "../api/api";
 
 type RouteParams = {
   id: string;
@@ -80,9 +81,16 @@ const DetailScreen = () => {
       keyboardDidShowListener.remove();
     };
   }, []);
-
+  const fetchProductDetail = async () => {
+    const data: any = await callFetchProductById(id);
+    if (data) {
+      setItem(data.data);
+    } else {
+      console.log("🚀 ~ fetchProductDetail ~ data:", data);
+    }
+  };
   useEffect(() => {
-    // try {
+    fetchProductDetail();
     //   const fetchItem = async () => {
     //     const { data } = await axios.get(`/products/detail?product=${id}`);
     //     if (data.success) {
@@ -92,19 +100,16 @@ const DetailScreen = () => {
     //     }
     //   };
     //   fetchItem();
-    // } catch (error) {
-    //   console.log(error);
-    // }
   }, []);
   useEffect(() => {
-    // const getProfile = async () => {
-    //   const user = await AsyncStorage.getItem("user");
-    //   if (user) {
-    //     const userObject = JSON.parse(user);
-    //     setProfile(userObject);
-    //   }
-    // };
-    // getProfile();
+    const getProfile = async () => {
+      const user = await AsyncStorage.getItem("user");
+      if (user) {
+        const userObject = JSON.parse(user);
+        setProfile(userObject);
+      }
+    };
+    getProfile();
   }, []);
 
   return (
@@ -133,7 +138,7 @@ const DetailScreen = () => {
                 }}
               />
               <View>
-                {/* {item?.images && <Pagination item={item.images} x={x} />} */}
+                {/* {item?.image && <Pagination item={item.image} x={x} />} */}
                 <Pagination item={[imgProductDefault.uri]} x={x} />
               </View>
 
