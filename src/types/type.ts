@@ -27,8 +27,14 @@ export type SignUp = {
     gender: string,
     address: string
 };
-
-
+export type User = {
+    _id: string;
+    name: string;
+    email: string;
+    gender: string;
+    age: string;
+    address: string;
+};
 
 
 export type updatePassword = {

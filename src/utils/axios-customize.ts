@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://a82a-2001-ee0-16f-4594-edc9-1c44-ccbd-add2.ngrok-free.app/api/v1/',
+    baseURL: 'https://9382-2604-6600-1c6-1000-f370-faa2-279b-4c16.ngrok-free.app/api/v1/',
     // baseURL: 'https://0219-14-169-1-15.ngrok-free.app/api/v1/',
     headers: {
         Accept: 'application/json',
@@ -18,7 +18,6 @@ instance.interceptors.request.use(
     async (config) => {
         // Do something before request is sent
         const access_token = await AsyncStorage.getItem('access_token');
-        console.log("🚀 ~ access_token:", access_token)
         if (access_token) {
             config.headers.Authorization = `Bearer ${access_token}`;
         }

@@ -9,6 +9,9 @@ import ForgotPassScreen from "../screens/ForgotPassScreen";
 import CodeScreen from "../screens/CodeScreen";
 import ChangePassScreen from "../screens/ChangePassScreen";
 import Toast from "react-native-toast-message";
+import SearchScreen from "../screens/SearchScreen";
+import DetailScreen from "../screens/DetailScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +32,9 @@ const AppNavigation = () => {
           name="ChangePass"
           component={ChangePassScreen}
         ></Stack.Screen>
+        <Stack.Screen name="Search" component={SearchScreen}></Stack.Screen>
+        <Stack.Screen name="Detail" component={DetailScreen}></Stack.Screen>
+        <Stack.Screen name="Profile" component={ProfileScreen}></Stack.Screen>
       </Stack.Navigator>
       <Toast />
     </NavigationContainer>
