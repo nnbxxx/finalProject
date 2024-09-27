@@ -44,7 +44,6 @@ const RegisterScreen = () => {
       user.address === "" ||
       user.age === "" ||
       user.email === "" ||
-      user.gender === "" ||
       user.name === "" ||
       user.password === ""
     ) {
@@ -60,7 +59,10 @@ const RegisterScreen = () => {
         type: "success",
         text1: "Resgister Success",
       });
-      navigation.replace("Login");
+      navigation.replace("Code", {
+        email: user.email,
+        active: 1, // xác thực lại tài khoản
+      });
     } else {
       const { message } = res as any;
       Toast.show({

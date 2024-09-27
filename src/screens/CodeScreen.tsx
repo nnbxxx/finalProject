@@ -29,7 +29,6 @@ const CodeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const { email, active } = route.params as RouteParams;
-
   const [checkCode, setCheckCode] = useState<string>();
   const handleSubmit = async () => {
     // nếu cần xác thực lại tài khoản
@@ -39,19 +38,19 @@ const CodeScreen = () => {
         type: "success",
         text1: "Xác thực tài khoản thành công.",
       });
+      if (active === 1) {
+        navigation.replace("Login");
+      }
+      // quên mật khẩu
+      else if (active === 2) {
+        navigation.replace("ChangePass", { code: checkCode, email });
+      }
     } else {
       const { message } = res;
       Toast.show({
         type: "error",
         text1: message,
       });
-    }
-    if (active === 1) {
-      navigation.replace("Login");
-    }
-    // quên mật khẩu
-    else if (active === 2) {
-      navigation.replace("ChangePass", { code: checkCode, email });
     }
   };
   return (
