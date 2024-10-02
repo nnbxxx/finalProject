@@ -1,47 +1,22 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { IProduct, RVariant, Variant } from "../types/type";
+import { IProduct } from "../types/type";
 // import axios from "../utils/axios";
 import Toast from "react-native-toast-message";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { addCartItemUser } from "../api/api";
 
 type Props = {
-  rVariant: RVariant | undefined;
-  listVariant: Variant | undefined;
   id: string;
   item: IProduct | undefined;
   user: string | undefined;
 };
 
-const colors: { [key: string]: string } = {
-  Blue: "bg-[#006CFF]",
-  Red: "bg-[#FC3E39]",
-  Black: "bg-[#171717]",
-  Pink: "bg-[#FF00B4]",
-  Yellow: "bg-[#FFF600]",
-  Wheat: "bg-[#EFDFDF]",
-};
-const borders: { [key: string]: string } = {
-  Blue: "border-[#006CFF]",
-  Red: "border-[#FC3E39]",
-  Black: "border-[#171717]",
-  Pink: "border-[#FF00B4]",
-  Yellow: "border-[#FFF600]",
-  Wheat: "border-[#EFDFDF]",
-};
-
-const Comfirm = ({ rVariant, listVariant, id, item, user }: Props) => {
+const Comfirm = ({ id, item, user }: Props) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
-  const [items, setItems] = useState<RVariant>({
-    size: rVariant?.size ?? 0,
-    color: rVariant?.color ?? "",
-    quantity: rVariant?.quantity ?? 0,
-  });
-
+  const [items, setItems] = useState<IProduct>(item as IProduct);
   const [quantity, setQuantity] = useState<number>(1);
-
   const handleDes = () => {
     if (quantity <= 1) return;
     else {
@@ -49,29 +24,29 @@ const Comfirm = ({ rVariant, listVariant, id, item, user }: Props) => {
     }
   };
   const handleIns = () => {
-    if (quantity >= items.quantity) return;
+    if (quantity >= +items.stock) return;
     else {
       setQuantity(quantity + 1);
     }
   };
-  const handleSetSize = (newSize: number) => {
-    setItems({ size: newSize, color: "", quantity: 0 });
-  };
-  const handleSetColor = (newColor: string) => {
-    setItems({ ...items, color: newColor });
-  };
 
   const handleAddCart = async () => {
-    // const { data } = await axios.post("/carts/addToCart", {
-    //   user: user,
-    //   product: id,
-    //   image: item?.images[0],
-    //   name: item?.name,
-    //   color: items.color,
-    //   size: items.size,
-    //   quantity: quantity,
-    //   price: item?.price,
-    // });
+    const product = {
+      _id: item?._id,
+      name: item?.name,
+      price: item?.price,
+      quantity: quantity,
+    };
+    const re = await addCartItemUser(product);
+    if (re.data) {
+      Toast.show({
+        type: "success",
+        text1: "Add to Cart Success",
+      });
+      navigation.replace("Cart", { user: user });
+    } else {
+      console.log("🚀 ~ handleAddCart ~ re:", JSON.stringify(re));
+    }
     // if (data.success) {
     //   Toast.show({
     //     type: "success",
@@ -81,80 +56,20 @@ const Comfirm = ({ rVariant, listVariant, id, item, user }: Props) => {
     // }
   };
 
-  useEffect(() => {
-    try {
-      const getQuantity = async () => {
-        // const { data } = await axios.get(
-        //   `/variants/product/color/size?product=${id}&color=${items.color}&size=${items.size}`
-        // );
-        // if (data.success) {
-        //   setItems({ ...items, quantity: data.data.quantity });
-        // } else {
-        //   setItems({ ...items, quantity: 0 });
-        // }
-      };
-      getQuantity();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [items.color]);
   return (
-    <View className="absolute bottom-0 w-screen h-auto bg-white rounded-[30px]">
+    <View className="absolute bottom-0 w-screen h-auto bg-white rounded-[30px] ">
       <View className="p-5">
         <View className="w-full border-b border-gray1 pb-[10px]">
-          <Text className="text-center font-bold text-base">
-            Tên Sản Phẩm .....
-          </Text>
+          <Text className="text-center font-bold text-base">{item?.name}</Text>
         </View>
-        <View className="py-5 px-10">
-          <Text className="font-semibold">Size</Text>
-          <View className="flex flex-row gap-[10px] mt-[5px]">
-            {/* {listVariant?.listSize.map((item) => (
-              <View
-                key={item}
-                className={`w-10 h-10 ${
-                  item === items.size ? "bg-main" : "bg-gray1"
-                } bg-main rounded-[15px] flex items-center justify-center`}
-              >
-                <TouchableOpacity onPress={() => handleSetSize(item)}>
-                  <Text
-                    className={`font-medium text-base ${
-                      item === items.size ? "text-white" : "text-black"
-                    } `}
-                  >
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ))} */}
-          </View>
-        </View>
-        <View className="py-5 px-10 border-b border-gray1">
-          <Text className="font-semibold">Color</Text>
-          <View className="flex flex-row gap-5 mt-[5px]">
-            {listVariant?.listColor.map((item) => (
-              <View
-                key={item}
-                className={`relative w-5 h-5 ${colors[item]} rounded-full`}
-              >
-                <TouchableOpacity onPress={() => handleSetColor(item)}>
-                  <View
-                    className={`absolute left-[-3px] top-[-3px] p-2.5 rounded-full border-[3px] ${
-                      item === items.color ? "border-gray1" : ""
-                    } `}
-                  ></View>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
-        </View>
+
         <View className="py-5 px-[10px] flex flex-row gap-10 items-center">
           <View>
-            {items.quantity === 0 ? (
+            {items.stock === 0 ? (
               <Text className="font-semibold text-gray1">Available: </Text>
             ) : (
               <Text className="font-semibold text-gray1">
-                Available: {items.quantity}
+                Available: {items.stock}
               </Text>
             )}
           </View>

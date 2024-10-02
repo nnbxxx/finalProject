@@ -1,5 +1,7 @@
 import { type } from 'os';
+import { SetStateAction } from 'react';
 export interface IBackendRes<T> {
+    items: SetStateAction<ICartItem[]>;
     error?: string | string[];
     message?: string;
     statusCode: number | string;
@@ -23,21 +25,97 @@ export interface IAccount {
         role: string
     }
 }
-export interface IProduct {
-    _id?: string;
+export type ItemCart = {
+    user?: string;
+    product: string;
+    image: string;
     name: string;
-    category?: string;
-    brand?: string;
-    price?: string | number;
-    description?: string;
-    shopName?: string;
-    rating?: string;
-    image?: any;
-    createdBy?: string;
-    isDeleted?: boolean;
-    deletedAt?: boolean | null;
-    createdAt?: string;
-    updatedAt?: string;
+    color: string;
+    size: string;
+    quantity: number;
+    price: number;
+    selected?: boolean;
+};
+export interface ICartItem {
+    product: string,
+    name: string,
+    quantity: number,
+    price: number,
+    _id: string,
+    isDeleted: boolean,
+    deletedAt: Date
+    selected?: boolean;
+}
+export interface ICart {
+    _id: string,
+    user: string,
+    total: number,
+    createdBy: any
+    isDeleted: boolean,
+    deletedAt: Date,
+    items: ICartItem[]
+}
+export interface IAddress {
+    province: string;
+    district: string;
+    ward: string;
+    detail: string;
+}
+export enum RECEIPT_STATUS {
+    CONFIRMED = 'CONFIRMED', //ĐƠN HÀNG ĐÃ XÁC NHẬN
+    UNCONFIRMED = 'UNCONFIRMED', // ĐƠN HÀNG MỚI 
+    PREPARE = 'PREPARE',// SHOP ĐANG CHUẨN BỊ HÀNG
+    ON_DELIVERY = 'ON_DELIVERY',// ĐANG GIAO HÀNG
+    DELIVERED = 'DELIVERED',// ĐÃ GIAO HÀNG THÀNH CÔNG
+    CANCEL = 'CANCEL'// HỦY ĐƠN HÀNG
+}
+
+export interface IOrder {
+    _id: string;
+    user: string;
+    address: IAddress;
+    items: ICartItem[]
+    supplier: string;
+    total: number;
+    notes: string;
+    createdBy: any;
+    statusUser: RECEIPT_STATUS;
+    statusSupplier: RECEIPT_STATUS;
+    isCheckout: boolean;
+    confirmationDate: Date;
+    isDeleted: boolean;
+    deletedAt: any;
+    createdAt: any;
+    updatedAt: any
+
+}
+export type Order = {
+    _id: string;
+    items: ItemCart[];
+    user: string;
+    deliveryAddress: Address;
+    paymentMethod: string;
+    total: number;
+    status?: string;
+    isPaid?: boolean;
+    isDelivered?: boolean;
+};
+export interface IProduct {
+    _id: string;
+    name: string;
+    category: string;
+    brand: string;
+    price: string | number;
+    stock: string | number;
+    description: string;
+    shopName: string;
+    rating: string;
+    image: any;
+    createdBy: string;
+    isDeleted: boolean;
+    deletedAt: boolean | null;
+    createdAt: string;
+    updatedAt: string;
 }
 export interface ICategory {
     _id?: string;
@@ -76,14 +154,6 @@ export type updateEmail = {
     newEmail: string;
 };
 
-
-
-export type Variant = {
-    listColor: string[];
-    listSize: string[];
-    quantity: number;
-};
-
 export type Address = {
     _id: string;
     user: string;
@@ -118,17 +188,7 @@ export type UpdateAddress = {
     specific: string;
 };
 
-export type ItemCart = {
-    user?: string;
-    product: string;
-    image: string;
-    name: string;
-    color: string;
-    size: string;
-    quantity: number;
-    price: number;
-    selected?: boolean;
-};
+
 
 export type Cart = {
     _id?: string;
@@ -137,17 +197,6 @@ export type Cart = {
     items: ItemCart[];
 };
 
-export type Order = {
-    _id: string;
-    items: ItemCart[];
-    userID: string;
-    deliveryAddress: Address;
-    paymentMethod: string;
-    total: number;
-    status?: string;
-    isPaid?: boolean;
-    isDelivered?: boolean;
-};
 export type checkoutOrder = {
     items: ItemCart[];
     userID: string;

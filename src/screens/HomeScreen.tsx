@@ -34,7 +34,11 @@ import Product from "../components/Product";
 import Navbar from "../components/Navbar";
 import { ICategory, IProduct } from "../types/type";
 import Loading from "../components/Loading";
-import { callFetchListCategory, callFetchListProduct } from "../api/api";
+import {
+  callFetchListCategory,
+  callFetchListProduct,
+  getCartByUser,
+} from "../api/api";
 import data from "../data/data";
 
 type Params = {
@@ -53,6 +57,8 @@ const HomeScreen = () => {
   const [active, setActive] = useState(0);
   const [total, setTotal] = useState(0);
   const [keyword, setKeyword] = useState("");
+  const [cartSize, setCartSize] = useState(0);
+
   useEffect(() => {
     const getProfile = async () => {
       const user = await AsyncStorage.getItem("user");
@@ -77,6 +83,14 @@ const HomeScreen = () => {
       setCategory(data.data.result);
     } else {
       console.log("🚀 ~ fetchListItems ~ data:", data);
+    }
+  };
+  const fetchCartData = async () => {
+    const res = await getCartByUser();
+    if (res && res.data) {
+      setCartSize(res.data.items.length);
+    } else {
+      console.log("🚀 ~ fetchData ~ res:", JSON.stringify(res.data.items));
     }
   };
   const fetchListItems = async () => {
@@ -113,6 +127,7 @@ const HomeScreen = () => {
   useEffect(() => {
     fetchListItems();
     fetchListCategory();
+    fetchCartData();
   }, []);
   useEffect(() => {
     fetchListItemByCategory(cateId);
@@ -151,7 +166,9 @@ const HomeScreen = () => {
                 </View>
               </TouchableOpacity>
               <View className="w-4 h-4 rounded-full bg-main absolute right-[-5px] top-[-3px]">
-                <Text className="text-[10px] text-white text-center">3</Text>
+                <Text className="text-[10px] text-white text-center">
+                  {cartSize}
+                </Text>
               </View>
             </View>
           </View>

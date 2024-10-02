@@ -6,48 +6,88 @@ import Order from "../components/Order";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Navbar from "../components/Navbar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRoute } from "@react-navigation/native";
-import { Order as O } from "../types/type";
+import {
+  ParamListBase,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { IOrder } from "../types/type";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { callFetchListReceipt } from "../api/api";
+import data from "../data/data";
 
 type Params = {
   user: string;
 };
 
 const OrdersScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const statuses = [
     "All",
-    "Confirming",
-    "Accepted",
-    "Delivering",
-    "Successful",
-    "Cancel",
-    "Return",
+    "Unconfirm", //UNCONFIRMED u u
+    "Confirm", //CONFIRMED c c
+    "Prepare", //PREPARE c p
+    "On Delivery", // ON_DELIVERY c o
+    "Delivered", //DELIVERED c d
+    "Cancel", //CANCEL ca ca
   ];
+  const query = {
+    unconfirm: "&statusUser=UNCONFIRMED&statusSupplier=UNCONFIRMED",
+    confirm: "&statusUser=CONFIRMED&statusSupplier=CONFIRMED",
+    prepare: "&statusUser=CONFIRMED&statusSupplier=PREPARE",
+    onDelivery: "&statusUser=CONFIRMED&statusSupplier=ON_DELIVERY",
+    delivered: "&statusUser=CONFIRMED&statusSupplier=DELIVERED",
+    cancel: "&statusUser=CANCEL&statusSupplier=CANCEL",
+  };
   const route = useRoute();
 
   const { user } = route.params as Params;
 
   const [active, setActive] = useState("All");
-  const [orders, setOrders] = useState<O[]>([]);
+  const [orders, setOrders] = useState<IOrder[]>([]);
 
+  const fetchListReceipt = async (query: string) => {
+    const re: any = await callFetchListReceipt(query);
+    if (re && re.data) {
+      setOrders(re.data.result);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      //   const { data } = await axios.get(
-      //     `/orders/user/status?status=${active}&pageSize=5&pageNumber=1&user=${user}`
-      //   );
-      //   if (data.success) {
-      //     setOrders(data.data);
-      //   }
-    };
-    fetchData();
+    switch (active) {
+      case "All":
+        fetchListReceipt("");
+        break;
+      case "Unconfirm":
+        fetchListReceipt(query.unconfirm);
+        break;
+      case "Confirm":
+        fetchListReceipt(query.confirm);
+        break;
+      case "Prepare":
+        fetchListReceipt(query.prepare);
+        break;
+      case "On Delivery":
+        fetchListReceipt(query.onDelivery);
+        break;
+      case "Delivered":
+        fetchListReceipt(query.delivered);
+        break;
+      case "Cancel":
+        fetchListReceipt(query.cancel);
+      default:
+        fetchListReceipt("");
+    }
   }, [active]);
   return (
     <SafeAreaView>
       <View className="relative px-5 h-screen">
         <View className="relative mt-10 mb-7 flex flex-row items-center justify-center">
-          <View className="absolute left-0">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="absolute left-0"
+          >
             <ArrowLeftIcon size={24} color={"#000000"} />
-          </View>
+          </TouchableOpacity>
           <Text className="font-medium text-lg">Orders</Text>
         </View>
         <View>
@@ -81,7 +121,7 @@ const OrdersScreen = () => {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={orders}
-            renderItem={(item) => <Order item={item} />}
+            renderItem={({ item }) => <Order item={item} />}
           />
         </View>
         <Navbar name="Orders" />

@@ -10,10 +10,11 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import { Address as A, ItemCart } from "../types/type";
+import { Address as A, ICartItem, ItemCart } from "../types/type";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ScrollView } from "react-native";
+import { checkoutReceipt } from "../api/api";
 
 const unProps = {
   onCheckedItem: () => {},
@@ -21,7 +22,7 @@ const unProps = {
 };
 
 type Params = {
-  data: ItemCart[];
+  data: ICartItem[];
   user: string;
   total: number;
 };
@@ -46,28 +47,44 @@ const CheckoutScreen = () => {
 
   const handleOrder = async () => {
     const itemCart = data.map((item) => {
-      //   const { selected, user, ...itemCart } = item;
-      //   return itemCart;
+      const { product, name, price, quantity } = item;
+      return { product, name, price, quantity };
     });
-    if (!address) {
-      Toast.show({
-        type: "error",
-        text1: "Please Create Address",
-      });
-      navigation.navigate("ManageAddress");
-    } else {
-      //   const { data } = await axios.post("/orders", {
-      //     items: itemCart,
-      //     userID: user,
-      //     deliveryAddress: address._id,
-      //     paymentMethod: pay,
-      //     total: total,
-      //   });
-      //   if (data.success) {
-      //     Toast.show({ type: "success", text1: "Order Success" });
-      //     navigation.replace("Order", { user: user });
-      //   }
+    console.log("🚀 ~ itemCart ~ itemCart:", itemCart);
+    const re = await checkoutReceipt({
+      items: itemCart,
+      supplier: "demo 123",
+      notes: "test demo",
+      address: {
+        province: "Thành phố Hà Nội",
+        district: "Quận Ba Đình",
+        ward: "Phường Trúc Bạch",
+        detail: "45/2/1 abc xyz",
+      },
+    });
+    if (re && re.data) {
+      Toast.show({ type: "success", text1: "Order Success" });
+      navigation.replace("Order", { user: user });
     }
+    // if (!address) {
+    //   Toast.show({
+    //     type: "error",
+    //     text1: "Please Create Address",
+    //   });
+    //   navigation.navigate("ManageAddress");
+    // } else {
+    //   const { data } = await axios.post("/orders", {
+    //     items: itemCart,
+    //     userID: user,
+    //     deliveryAddress: address._id,
+    //     paymentMethod: pay,
+    //     total: total,
+    //   });
+    //   if (data.success) {
+    //     Toast.show({ type: "success", text1: "Order Success" });
+    //     navigation.replace("Order", { user: user });
+    //   }
+    // }
   };
   return (
     <SafeAreaView>
@@ -97,8 +114,7 @@ const CheckoutScreen = () => {
               <FlatList
                 data={data}
                 renderItem={({ item }) => (
-                  // <CartItem data={item} {...unProps} type="Checkout" />
-                  <CartItem />
+                  <CartItem data={item} {...unProps} type="Checkout" />
                 )}
                 showsVerticalScrollIndicator={false}
                 scrollEnabled={true}
@@ -128,7 +144,7 @@ const CheckoutScreen = () => {
               </View>
               <View className="mt-9 w-full flex flex-row justify-between mb-5">
                 <Text className="text-lg">Total</Text>
-                <Text className="text-xl text-money">#{total}</Text>
+                <Text className="text-xl text-money">{total} VNĐ</Text>
               </View>
               <TouchableOpacity
                 className="w-full h-[60px] bg-main rounded-[30px] flex items-center justify-center mb-5"

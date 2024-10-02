@@ -23,14 +23,12 @@ const ForgotPassScreen = () => {
 
   const handleSubmit = async () => {
     const retry: any = await userRetryPassword(email);
-    console.log("🚀 ~ handleSubmit ~ retry:", retry);
     if (retry && retry.data) {
       const { data } = retry as any;
       navigation.navigate("Code", {
         email: data.email,
         active: 2, // quên mật khẩu
       });
-      console.log(1233);
     } else {
       const { message } = retry as any;
       Toast.show({

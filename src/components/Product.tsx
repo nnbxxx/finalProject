@@ -44,9 +44,14 @@ const Product = ({ name, item }: any) => {
           <Text className="mt-[6px]">{item.brand}</Text>
           <Text className="text-money">${item.price}</Text>
           <View className="flex flex-row items-center justify-between mt-[10px]">
-            <TouchableOpacity className="w-[100px] h-8 rounded-[36px] bg-main flex items-center justify-center mr-5">
-              <Text className="text-white">Add To Cart</Text>
-            </TouchableOpacity>
+            {name !== "Home" ? (
+              <TouchableOpacity className="w-[100px] h-8 rounded-[36px] bg-main flex items-center justify-center mr-5">
+                <Text className="text-white">Add To Cart</Text>
+              </TouchableOpacity>
+            ) : (
+              <></>
+            )}
+
             <HeartIcon width={20} color="#000000" height={18} />
           </View>
         </View>

@@ -1,5 +1,5 @@
 // User API
-import { IAccount, IBackendRes, ICategory, IModelPaginate, IProduct, SignIn, SignUp } from "../types/type";
+import { IAccount, IBackendRes, ICart, ICategory, IModelPaginate, IOrder, IProduct, SignIn, SignUp } from "../types/type";
 import instance from "../utils/axios-customize";
 
 export const userLogin = (user: SignIn) => {
@@ -38,4 +38,22 @@ export const callFetchListCategory = (query: string) => {
 }
 export const callFetchProductById = (id: string) => {
     return instance.get<IBackendRes<IProduct>>(`products/${id}`);
+}
+export const getCartByUser = () => {
+    return instance.get<IBackendRes<ICart>>(`carts/user`)
+}
+export const removeCartItemUser = (id: string) => {
+    return instance.delete<IBackendRes<ICart>>(`carts/${id}`)
+}
+export const addCartItemUser = (product: any) => {
+    return instance.post<IBackendRes<ICart>>(`carts/add`, { product })
+}
+export const checkoutReceipt = (data: any) => {
+    return instance.post<IBackendRes<any>>(`receipts`, data)
+}
+export const callFetchListReceipt = (query: string) => {
+    return instance.get<IBackendRes<IModelPaginate<any>>>(`receipts?current=1&pageSize=999?${query}`);
+}
+export const getReceiptById = (id: string) => {
+    return instance.get<IBackendRes<IOrder>>(`receipts/${id}`)
 }

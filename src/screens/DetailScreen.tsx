@@ -23,7 +23,7 @@ import { Rating } from "@mui/material";
 import Review from "../components/Review";
 import ProductInfo from "../components/ProductInfo";
 import { HeartIcon } from "react-native-heroicons/outline";
-import { IProduct, RVariant, User, Variant } from "../types/type";
+import { IProduct, RVariant, User } from "../types/type";
 
 import { useRoute } from "@react-navigation/native";
 import Comfirm from "../components/Comfirm";
@@ -60,8 +60,6 @@ const DetailScreen = () => {
   const { id } = route.params as RouteParams;
 
   const [item, setItem] = useState<IProduct>();
-  const [rVariant, setRVariant] = useState<RVariant>();
-  const [listVariant, setListVariant] = useState<Variant>();
   const [active, setActive] = useState(false);
   const [profile, setProfile] = useState<User>();
 
@@ -190,15 +188,7 @@ const DetailScreen = () => {
             <HeartIcon width={36} height={32} color="black" />
           </View>
         </View>
-        {active && (
-          <Comfirm
-            rVariant={rVariant}
-            listVariant={listVariant}
-            id={id}
-            item={item}
-            user={profile?._id}
-          />
-        )}
+        {active && <Comfirm id={id} item={item} user={profile?._id} />}
       </ScrollView>
     </SafeAreaView>
   );

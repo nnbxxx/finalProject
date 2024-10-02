@@ -70,7 +70,7 @@ const SearchScreen = () => {
   };
 
   useEffect(() => {
-    console.log("Perform search with keyword:", keyword);
+    // console.log("Perform search with keyword:", keyword);
     fetchProductByKeyWord(keyword2);
   }, [keyword2]);
 

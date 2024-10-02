@@ -8,7 +8,7 @@ const WelcomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   useEffect(() => {
-    setTimeout(() => navigation.navigate("Home"), 100);
+    setTimeout(() => navigation.navigate("Home"), 3000);
   }, []);
   return (
     <View style={styles.appScreen}>

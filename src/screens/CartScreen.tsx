@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CartItem from "../components/CartItem";
 import { Checkbox } from "react-native-paper";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import { Cart, ItemCart } from "../types/type";
+import { ICart, ICartItem } from "../types/type";
 import {
   ParamListBase,
   useNavigation,
@@ -12,42 +12,50 @@ import {
 } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
+import { getCartByUser, removeCartItemUser } from "../api/api";
+
 type RouteParams = {
   user: string;
 };
+
 const CartScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
   const route = useRoute();
   const { user } = route.params as RouteParams;
-  const [cart, setCart] = useState<ItemCart[]>([]);
+
+  const [cart, setCart] = useState<ICartItem[]>([]);
   const [checkedAll, setCheckedAll] = useState<boolean>(false);
-  const [selectedCart, setSelectedCart] = useState<ItemCart[]>([]);
+  const [selectedCart, setSelectedCart] = useState<ICartItem[]>([]);
   const [total, setTotal] = useState(0);
   const fetchData = async () => {
-    // const { data } = await axios.get(`/carts?user=${user}`);
-    // if (data.success) {
-    //   setCart(data.data.items);
-    //   setCheckedAll(false);
-    // }
+    const res = await getCartByUser();
+    if (res && res.data) {
+      setCart(res.data.items);
+      setCheckedAll(false);
+    } else {
+      console.log("🚀 ~ fetchData ~ res:", JSON.stringify(res.data.items));
+    }
   };
-  const handleFilterData = (data: ItemCart[]) => {
-    // const filterData = data.filter((item) => {
-    //   return item.selected;
-    // });
-    // setSelectedCart(filterData);
+  const handleFilterData = (data: ICartItem[]) => {
+    const filterData = data.filter((item) => {
+      return item.selected;
+    });
+    setSelectedCart(filterData);
   };
-  const handleSelectedItem = (item: ItemCart) => {
+  const handleSelectedItem = (item: ICartItem) => {
     const selectedItem = cart?.map((data) => {
       if (item.product === data.product) {
         return {
           ...data,
-          //   selected: !data.selected,
+          selected: !data.selected,
         };
       } else return data;
     });
     setCart(selectedItem);
     handleFilterData(selectedItem);
   };
+
   const handleSelectedAll = () => {
     const filterCart = cart?.map((data) => {
       if (checkedAll) {
@@ -66,21 +74,19 @@ const CartScreen = () => {
     handleFilterData(filterCart);
   };
   const validateSelectedAll = () => {
-    // const data = cart?.every((item) => item.selected === true);
-    // setCheckedAll(data);
+    const data = cart?.every((item) => item.selected === true);
+    setCheckedAll(data);
   };
+
   const handleRemove = async (id: string) => {
-    // const { data } = await axios.delete(
-    //   `/carts/remove?user=${user}&product=${id}`
-    // );
-    // if (data.success) {
-    //   Toast.show({
-    //     type: "success",
-    //     text1: "Delete Item Success",
-    //   });
-    //   const updatedCart = cart.filter((item) => item.product !== id);
-    //   setCart(updatedCart);
-    // }
+    const re = await removeCartItemUser(id);
+    if (re && re.data) {
+      Toast.show({
+        type: "success",
+        text1: "Delete Item Success",
+      });
+      setCart(re.data.items);
+    }
   };
   const handlePrice = () => {
     const price = selectedCart.reduce(
@@ -99,6 +105,7 @@ const CartScreen = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   useEffect(() => {
     handlePrice();
     validateSelectedAll();
@@ -121,7 +128,7 @@ const CartScreen = () => {
           </Text>
         </View>
         <View className="h-[500px]">
-          {/* <FlatList
+          <FlatList
             data={cart}
             renderItem={({ item }) => (
               <CartItem
@@ -133,7 +140,7 @@ const CartScreen = () => {
             )}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.product}
-          /> */}
+          />
         </View>
         <View className="absolute bottom-0 w-full">
           <View className="pl-[15px] mb-10 flex flex-col items-center">
@@ -147,7 +154,7 @@ const CartScreen = () => {
               </View>
               <View className="flex flex-row gap-[10px]">
                 <Text className="font-medium">Total:</Text>
-                <Text className="text-money">${total}</Text>
+                <Text className="text-money">{total} VNĐ</Text>
               </View>
             </View>
             <TouchableOpacity
@@ -164,4 +171,5 @@ const CartScreen = () => {
     </SafeAreaView>
   );
 };
+
 export default CartScreen;
