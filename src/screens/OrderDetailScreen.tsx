@@ -19,6 +19,7 @@ import {
 import { IAddress, IOrder } from "../types/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { getReceiptById } from "../api/api";
+import Toast from "react-native-toast-message";
 type Params = {
   id: string;
 };
@@ -37,6 +38,12 @@ const OrderDetailScreen = () => {
     const re: any = await getReceiptById(id);
     if (re && re.data) {
       setOrder(re.data);
+    } else {
+      const { message, statusCode } = re as any;
+      Toast.show({
+        type: "error",
+        text1: JSON.stringify(message),
+      });
     }
   };
   useEffect(() => {

@@ -65,6 +65,12 @@ const CheckoutScreen = () => {
     if (re && re.data) {
       Toast.show({ type: "success", text1: "Order Success" });
       navigation.replace("Order", { user: user });
+    } else {
+      const { message, statusCode } = re as any;
+      Toast.show({
+        type: "error",
+        text1: JSON.stringify(message),
+      });
     }
     // if (!address) {
     //   Toast.show({

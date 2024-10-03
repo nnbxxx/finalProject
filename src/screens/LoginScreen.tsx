@@ -46,7 +46,7 @@ const LoginScreen = () => {
         text1: message,
       });
       if (statusCode === 400) {
-        const retry = await userRetryActive(user.username);
+        await userRetryActive(user.username);
         navigation.navigate("Code", {
           email: user.username,
           active: 1, // xác thực lại tài khoản

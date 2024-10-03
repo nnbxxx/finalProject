@@ -110,7 +110,7 @@ const HomeScreen = () => {
       setHots(dataHot.data.result);
       setTotal(dataHot.data.meta.total);
     } else {
-      console.log("🚀 ~ fetchListItems ~ dataHot:", dataHot);
+      // console.log("🚀 ~ fetchListItems ~ dataHot:", dataHot);
     }
   };
   const fetchListItemByCategory = async (id: string) => {
