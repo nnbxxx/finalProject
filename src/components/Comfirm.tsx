@@ -45,7 +45,12 @@ const Comfirm = ({ id, item, user }: Props) => {
       });
       navigation.replace("Cart", { user: user });
     } else {
-      console.log("🚀 ~ handleAddCart ~ re:", JSON.stringify(re));
+      const { message, statusCode } = re as any;
+      Toast.show({
+        type: "error",
+        text1: JSON.stringify(message),
+      });
+      // console.log("🚀 ~ handleAddCart ~ re:", JSON.stringify(re));
     }
     // if (data.success) {
     //   Toast.show({

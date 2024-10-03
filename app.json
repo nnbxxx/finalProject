@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Shoes_Mobile",
-    "slug": "Shoes_Mobile",
+    "name": "cloth_Mobile",
+    "slug": "cloth_Mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,8 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
+    "assetBundlePatterns": [ "**/*"
     ],
     "ios": {
       "supportsTablet": true
