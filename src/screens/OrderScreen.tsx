@@ -1,5 +1,11 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native";
 import Order from "../components/Order";
@@ -11,14 +17,15 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import { IOrder } from "../types/type";
+import { IOrder, ICartItem } from "../types/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { callFetchListReceipt } from "../api/api";
 import data from "../data/data";
 import Toast from "react-native-toast-message";
-
+import Comments from "../components/Comments";
+import Loading from "../components/Loading";
 type Params = {
-  user: string;
+  id: string;
 };
 
 const OrdersScreen = () => {
@@ -42,11 +49,24 @@ const OrdersScreen = () => {
   };
   const route = useRoute();
 
-  const { user } = route.params as Params;
+  const { id } = route.params as Params;
 
   const [active, setActive] = useState("All");
   const [orders, setOrders] = useState<IOrder[]>([]);
-
+  const [product, setProduct] = useState<ICartItem[]>();
+  const [form, setForm] = useState(false);
+  const handlePressOutside = () => {
+    setForm(false);
+  };
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      handlePressOutside
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
   const fetchListReceipt = async (query: string) => {
     const re: any = await callFetchListReceipt(query);
     if (re && re.data) {
@@ -87,52 +107,76 @@ const OrdersScreen = () => {
   }, [active]);
   return (
     <SafeAreaView>
-      <View className="relative px-5 h-screen">
-        <View className="relative mt-10 mb-7 flex flex-row items-center justify-center">
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            className="absolute left-0"
-          >
-            <ArrowLeftIcon size={24} color={"#000000"} />
-          </TouchableOpacity>
-          <Text className="font-medium text-lg">Orders</Text>
-        </View>
-        <View>
-          <FlatList
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingTop: 20 }}
-            data={statuses}
-            keyExtractor={(item, idx) => item + idx}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => setActive(item)}>
-                <View
-                  className={`w-[100px] h-7 ${
-                    active === item ? "border-main border-b" : ""
-                  }`}
-                  key={item}
-                >
-                  <Text
-                    className={`${
-                      active === item ? "text-main" : "text-gray1"
-                    } text-center text-base`}
+      <TouchableWithoutFeedback onPress={handlePressOutside}>
+        <View className="relative px-5 h-screen">
+          <View className="relative mt-10 mb-7 flex flex-row items-center justify-center">
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              className="absolute left-0"
+            >
+              <ArrowLeftIcon size={24} color={"#000000"} />
+            </TouchableOpacity>
+            <Text className="font-medium text-lg">Orders</Text>
+          </View>
+          <View>
+            <FlatList
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingTop: 20 }}
+              data={statuses}
+              keyExtractor={(item, idx) => item + idx}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => setActive(item)}>
+                  <View
+                    className={`w-[100px] h-7 ${
+                      active === item ? "border-main border-b" : ""
+                    }`}
+                    key={item}
                   >
-                    {item}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
+                    <Text
+                      className={`${
+                        active === item ? "text-main" : "text-gray1"
+                      } text-center text-base`}
+                    >
+                      {item}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+          {orders.length === 0 ? (
+            <View className="mt-[50px] h-[50px]">
+              <Loading name="Order" />
+            </View>
+          ) : (
+            <View className="mt-[10px]">
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                data={orders}
+                renderItem={({ item }) => (
+                  <Order
+                    item={item}
+                    setForm={setForm}
+                    setProduct={
+                      setProduct as Dispatch<SetStateAction<ICartItem[]>>
+                    }
+                  />
+                )}
+              />
+            </View>
+          )}
+
+          <Navbar name="Orders" />
+          {form && (
+            <Comments
+              setForm={setForm}
+              user={id}
+              product={product as ICartItem[]}
+            />
+          )}
         </View>
-        <View className="mt-[10px]">
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={orders}
-            renderItem={({ item }) => <Order item={item} />}
-          />
-        </View>
-        <Navbar name="Orders" />
-      </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

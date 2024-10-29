@@ -69,6 +69,10 @@ export enum RECEIPT_STATUS {
     DELIVERED = 'DELIVERED',// ĐÃ GIAO HÀNG THÀNH CÔNG
     CANCEL = 'CANCEL'// HỦY ĐƠN HÀNG
 }
+export enum PAYMENT_METHOD {
+    COD = 'COD',
+    VNPAY = 'VNPAY'
+}
 
 export interface IOrder {
     _id: string;
@@ -145,6 +149,7 @@ export type User = {
     gender: string;
     age: string;
     address: string;
+    avatar: string
 };
 
 
@@ -279,4 +284,26 @@ export type upUser = {
     gender: string;
     birthDay: string;
     phone: string;
+};
+
+
+
+export type Comment = {
+    _id: string;
+    commentator: Commentator;
+    product: string;
+    rating: number;
+    like: number;
+    images: string;
+};
+export type Commentator = {
+    _id: string;
+    fullName: string;
+    avatar: string;
+};
+export type Coupon = {
+    _id: string;
+    code: string;
+    name: string;
+
 };

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
@@ -10,8 +10,14 @@ import Loading from "../components/Loading";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Navbar from "../components/Navbar";
 import { callFetchListFavouriteProduct } from "../api/api";
-import { useRoute } from "@react-navigation/native";
+
 import ProductFavorite from "../components/ProductFavorite";
+import {
+  ParamListBase,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 type Params = {
   id: string;
 };
@@ -20,6 +26,7 @@ const FavoriteScreen = () => {
   const route = useRoute();
   const { id } = route.params as Params;
   const [load, setLoad] = useState<boolean>(false);
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const fetchItem = async () => {
     const re = (await callFetchListFavouriteProduct()) as any;
     if (re && re.data) {
@@ -37,9 +44,12 @@ const FavoriteScreen = () => {
         className="relative h-screen px-5"
       >
         <View className="relative mt-10 px-5 flex flex-row items-center justify-center">
-          <View className="absolute left-0">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="absolute left-0"
+          >
             <ArrowLeftIcon size={24} color={"#000000"} />
-          </View>
+          </TouchableOpacity>
           <Text className="font-medium text-lg">Favorites</Text>
         </View>
         <View className="mt-10">
@@ -51,7 +61,7 @@ const FavoriteScreen = () => {
             //         Try searching the item with a different keyword.
             //     </Text>
             // </View>
-            <Loading />
+            <Loading name="Favorite" />
           ) : (
             // <></>
             <MasonryList

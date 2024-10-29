@@ -21,6 +21,7 @@ import ListAddressScreen from "../screens/ListAddressScreen";
 import ManageAddressScreen from "../screens/ManageAddressSceen";
 import OrdersScreen from "../screens/OrderScreen";
 import OrderDetailScreen from "../screens/OrderDetailScreen";
+import CouponScreen from "../screens/CouponScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +69,7 @@ const AppNavigation = () => {
           name="OrderDetail"
           component={OrderDetailScreen}
         ></Stack.Screen>
+        <Stack.Screen name="Coupon" component={CouponScreen}></Stack.Screen>
       </Stack.Navigator>
       <Toast />
     </NavigationContainer>

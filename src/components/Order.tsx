@@ -1,16 +1,21 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
-import { IOrder } from "../types/type";
+import React, { Dispatch, SetStateAction } from "react";
+import { ICartItem, IOrder, RECEIPT_STATUS } from "../types/type";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { imgProductDefault } from "../utils/imageDefault";
 type Props = {
   item: IOrder;
+  setForm: Dispatch<SetStateAction<boolean>>;
+  setProduct: Dispatch<SetStateAction<ICartItem[]>>;
 };
 
-const Order = ({ item }: Props) => {
+const Order = ({ item, setForm, setProduct }: Props) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+  const handleClick = () => {
+    setForm(true);
+    setProduct(item.items);
+  };
   return (
     <TouchableOpacity
       onPress={() =>
@@ -55,7 +60,15 @@ const Order = ({ item }: Props) => {
           <Text className="text-xs text-main">
             {item.isCheckout ? `Đã thanh toán` : `Chưa thanh toán`}
           </Text>
+          <Text className="text-xs text-main">{item.statusUser}</Text>
           <Text className="text-money">Total: {item.total} VNĐ</Text>
+          {item.statusSupplier === RECEIPT_STATUS.DELIVERED && (
+            <TouchableOpacity onPress={handleClick}>
+              <View className="w-[80px] h-8 bg-main rounded-2xl flex items-center justify-center">
+                <Text className="text-xs text-white">Review</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </TouchableOpacity>
