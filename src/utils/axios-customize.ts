@@ -1,9 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
+const handleRefreshToken = async () => {
+    const res = await instance.get('/api/v1/auth/refresh');
+    if (res && res.data) return res.data.access_token;
+    else null;
+}
+
+
+
 const instance = axios.create({
-    baseURL: 'https://be-tlcn.onrender.com/api/v1/',
-    // baseURL: 'https://0219-14-169-1-15.ngrok-free.app/api/v1/',
+    // baseURL: 'https://be-tlcn.onrender.com/api/v1/',
+    baseURL: 'https://6f1b-2001-ee0-264-a21a-b916-11f7-6070-2c1b.ngrok-free.app/api/v1/',
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -28,16 +36,29 @@ instance.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
+const NO_RETRY_HEADER = 'x-no-retry'
 // Add a response interceptor
 instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     if (response.data && response.data.data) return response.data;
     return response;
-}, function (error) {
+}, async function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
+    if (error.config && error.response
+        && +error.response.status === 401
+        && !error.config.headers[NO_RETRY_HEADER]
+    ) {
+
+        const access_token = await handleRefreshToken();
+        error.config.headers[NO_RETRY_HEADER] = 'true'
+        if (access_token) {
+            error.config.headers['Authorization'] = `Bearer ${access_token}`;
+            localStorage.setItem('access_token', access_token)
+            return instance.request(error.config);
+        }
+    }
 
     if (error.response && error.response.data) return error.response.data;
     return Promise.reject(error);

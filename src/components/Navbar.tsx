@@ -53,7 +53,9 @@ const Navbar = ({ name }: Props) => {
       <TouchableOpacity onPress={() => navigation.navigate("Home")}>
         <HomeIcon color={`${name === "Home" ? "#33A0FF" : "#ADADAF"}`} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Favorite")}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Favorite", { id: profile?._id })}
+      >
         <HeartIcon color={`${name === "Favorites" ? "#33A0FF" : "#ADADAF"}`} />
       </TouchableOpacity>
       <TouchableOpacity onPress={check}>

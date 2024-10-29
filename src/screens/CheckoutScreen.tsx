@@ -14,7 +14,7 @@ import { Address as A, ICartItem, ItemCart } from "../types/type";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ScrollView } from "react-native";
-import { checkoutReceipt } from "../api/api";
+import { checkoutReceipt, getAddressUserDefault } from "../api/api";
 
 const unProps = {
   onCheckedItem: () => {},
@@ -34,15 +34,18 @@ const CheckoutScreen = () => {
   const route = useRoute();
   const [pay, setPay] = useState("COD");
   const { data, user, total } = route.params as Params;
-
+  const fetchDataAddressUser = async () => {
+    const re = (await getAddressUserDefault()) as any;
+    if (re && re.data) {
+      setAddress(re.data);
+    } else setAddress(undefined);
+  };
   useEffect(() => {
     // const fetchData = async () => {
     //   const { data } = await axios.get(`/address/user/default?user=${user}`);
-    //   if (data.success) {
-    //     setAddress(data.data);
-    //   } else setAddress(undefined);
+
     // };
-    // fetchData();
+    fetchDataAddressUser();
   }, []);
 
   const handleOrder = async () => {
@@ -50,41 +53,37 @@ const CheckoutScreen = () => {
       const { product, name, price, quantity } = item;
       return { product, name, price, quantity };
     });
-    console.log("🚀 ~ itemCart ~ itemCart:", itemCart);
-    const re = await checkoutReceipt({
-      items: itemCart,
-      supplier: "demo 123",
-      notes: "test demo",
-      address: {
-        province: "Thành phố Hà Nội",
-        district: "Quận Ba Đình",
-        ward: "Phường Trúc Bạch",
-        detail: "45/2/1 abc xyz",
-      },
-    });
-    if (re && re.data) {
-      Toast.show({ type: "success", text1: "Order Success" });
-      navigation.replace("Order", { user: user });
+
+    if (!address) {
+      Toast.show({
+        type: "error",
+        text1: "Please Create Address",
+      });
+      navigation.navigate("ManageAddress");
+    } else {
+      const re = await checkoutReceipt({
+        items: itemCart,
+        supplier: "demo 123",
+        notes: "test demo",
+        address: {
+          province: address.province,
+          district: address.districts,
+          ward: address.wards,
+          detail: address.specific,
+        },
+      });
+
+      if (re && re.data) {
+        Toast.show({ type: "success", text1: "Order Success" });
+        navigation.replace("Order", { user: user });
+      } else {
+        const { message, statusCode } = re as any;
+        Toast.show({
+          type: "error",
+          text1: JSON.stringify(message),
+        });
+      }
     }
-    // if (!address) {
-    //   Toast.show({
-    //     type: "error",
-    //     text1: "Please Create Address",
-    //   });
-    //   navigation.navigate("ManageAddress");
-    // } else {
-    //   const { data } = await axios.post("/orders", {
-    //     items: itemCart,
-    //     userID: user,
-    //     deliveryAddress: address._id,
-    //     paymentMethod: pay,
-    //     total: total,
-    //   });
-    //   if (data.success) {
-    //     Toast.show({ type: "success", text1: "Order Success" });
-    //     navigation.replace("Order", { user: user });
-    //   }
-    // }
   };
   return (
     <SafeAreaView>

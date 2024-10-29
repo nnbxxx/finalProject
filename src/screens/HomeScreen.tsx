@@ -41,15 +41,11 @@ import {
 } from "../api/api";
 import data from "../data/data";
 
-type Params = {
-  id: string;
-};
-
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const [user, setUser] = useState<string | null>(null);
-  const [id, setId] = useState<string | null>(null);
+  const [load, setLoad] = useState<boolean>(false);
   const [category, setCategory] = useState<ICategory[]>();
   const [cateId, setCateId] = useState("");
   const [items, setItems] = useState<IProduct[]>();
@@ -110,7 +106,7 @@ const HomeScreen = () => {
       setHots(dataHot.data.result);
       setTotal(dataHot.data.meta.total);
     } else {
-      console.log("🚀 ~ fetchListItems ~ dataHot:", dataHot);
+      // console.log("🚀 ~ fetchListItems ~ dataHot:", dataHot);
     }
   };
   const fetchListItemByCategory = async (id: string) => {
@@ -131,7 +127,7 @@ const HomeScreen = () => {
   }, []);
   useEffect(() => {
     fetchListItemByCategory(cateId);
-  }, [cateId]);
+  }, [cateId, load]);
   const handleChange = (id: string, index: number) => {
     setCateId(id);
     setActive(index);
@@ -233,7 +229,14 @@ const HomeScreen = () => {
                   data={items}
                   keyExtractor={(item: any, idx) => item._id + idx}
                   renderItem={({ item }) => (
-                    <Product name="Home" key={item._id} item={item} />
+                    <Product
+                      name="Home"
+                      key={item._id}
+                      item={item}
+                      user={user}
+                      setLoad={setLoad}
+                      load={load}
+                    />
                   )}
                 />
               </View>
@@ -256,7 +259,14 @@ const HomeScreen = () => {
                 data={hots}
                 keyExtractor={(item: any, idx) => item._id + idx}
                 renderItem={({ item }) => (
-                  <Product name="Home" key={item._id} item={item} />
+                  <Product
+                    name="Home"
+                    key={item._id}
+                    item={item}
+                    user={user}
+                    setLoad={setLoad}
+                    load={load}
+                  />
                 )}
               />
             </View>

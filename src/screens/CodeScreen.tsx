@@ -43,7 +43,7 @@ const CodeScreen = () => {
       }
       // quên mật khẩu
       else if (active === 2) {
-        navigation.replace("ChangePass", { code: checkCode, email });
+        navigation.replace("Recovery", { code: checkCode, email });
       }
     } else {
       const { message } = res;

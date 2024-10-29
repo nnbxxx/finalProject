@@ -34,7 +34,12 @@ const CartScreen = () => {
       setCart(res.data.items);
       setCheckedAll(false);
     } else {
-      console.log("🚀 ~ fetchData ~ res:", JSON.stringify(res.data.items));
+      const { message, statusCode } = res as any;
+      Toast.show({
+        type: "error",
+        text1: message,
+      });
+      // console.log("🚀 ~ fetchData ~ res:", JSON.stringify(res.data.items));
     }
   };
   const handleFilterData = (data: ICartItem[]) => {
@@ -86,6 +91,12 @@ const CartScreen = () => {
         text1: "Delete Item Success",
       });
       setCart(re.data.items);
+    } else {
+      const { message, statusCode } = re as any;
+      Toast.show({
+        type: "error",
+        text1: message,
+      });
     }
   };
   const handlePrice = () => {

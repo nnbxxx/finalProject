@@ -3,7 +3,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 
-const ChangePasswordScreen = () => {
+const RecoveryPasswordScreen = () => {
   return (
     <SafeAreaView>
       <View className="p-10">
@@ -43,4 +43,4 @@ const ChangePasswordScreen = () => {
   );
 };
 
-export default ChangePasswordScreen;
+export default RecoveryPasswordScreen;

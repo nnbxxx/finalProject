@@ -86,7 +86,8 @@ export interface IOrder {
     isDeleted: boolean;
     deletedAt: any;
     createdAt: any;
-    updatedAt: any
+    updatedAt: any;
+    paymentMethod: any
 
 }
 export type Order = {
@@ -100,6 +101,9 @@ export type Order = {
     isPaid?: boolean;
     isDelivered?: boolean;
 };
+export interface IProductFavorite {
+
+}
 export interface IProduct {
     _id: string;
     name: string;
@@ -155,7 +159,7 @@ export type updateEmail = {
 };
 
 export type Address = {
-    _id: string;
+    _id?: string;
     user: string;
     receiver: string;
     phone: string;
@@ -163,7 +167,7 @@ export type Address = {
     districts: string;
     wards: string;
     specific: string;
-    default: boolean;
+    isDefault?: boolean;
 };
 
 
@@ -175,6 +179,7 @@ export type AddressLess = {
     districts: string;
     wards: string;
     specific: string;
+    selected?: boolean;
 };
 
 export type UpdateAddress = {
@@ -199,7 +204,7 @@ export type Cart = {
 
 export type checkoutOrder = {
     items: ItemCart[];
-    userID: string;
+    user: string;
     deliveryAddress: string;
     paymentMethod: string;
     total: number;

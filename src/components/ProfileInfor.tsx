@@ -14,7 +14,7 @@ const ProfileInfo = ({ profile }: Props) => {
   return (
     <View className="w-full h-[227px] flex flex-row items-end pt-[16px] pb-10 bg-white rounded-[20px]">
       <Image
-        source={{ uri: avtDefault.uri }}
+        source={{ uri: profile.avatar }}
         style={{ width: 80, height: 80 }}
         className="rounded-[10px] mx-[10px] my-[50px]"
       />

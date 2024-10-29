@@ -1,11 +1,29 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import AddressItem from "../components/AddressItem";
-
+import { useRoute } from "@react-navigation/native";
+import { callFetchListUserAddress } from "../api/api";
+type Params = {
+  user: string;
+};
 const ListAddressScreen = () => {
+  const route = useRoute();
+  const { user } = route.params as Params;
+
   const [address, setAddress] = useState([]);
+  const fetchListUserAddress = async () => {
+    const re = (await callFetchListUserAddress(user)) as any;
+    if (re && re.data) {
+      setAddress(re.data.result);
+    }
+  };
+  useEffect(() => {
+    fetchListUserAddress();
+    return () => {};
+  }, []);
+
   return (
     <SafeAreaView>
       <View className="relative h-screen p-10">
@@ -19,7 +37,7 @@ const ListAddressScreen = () => {
           <FlatList
             showsVerticalScrollIndicator
             data={address}
-            renderItem={(item) => <AddressItem />}
+            renderItem={({ item }) => <AddressItem item={item} />}
           />
         </View>
 

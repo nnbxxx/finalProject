@@ -15,6 +15,7 @@ import { IOrder } from "../types/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { callFetchListReceipt } from "../api/api";
 import data from "../data/data";
+import Toast from "react-native-toast-message";
 
 type Params = {
   user: string;
@@ -50,6 +51,12 @@ const OrdersScreen = () => {
     const re: any = await callFetchListReceipt(query);
     if (re && re.data) {
       setOrders(re.data.result);
+    } else {
+      const { message, statusCode } = re as any;
+      Toast.show({
+        type: "error",
+        text1: JSON.stringify(message),
+      });
     }
   };
   useEffect(() => {

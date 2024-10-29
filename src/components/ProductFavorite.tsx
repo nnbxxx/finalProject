@@ -18,6 +18,7 @@ import { imgProductDefault } from "../utils/imageDefault";
 import { IProduct } from "../types/type";
 import {
   addFavoriteProduct,
+  callFetchProductById,
   checkFavoriteProduct,
   removeFavoriteProduct,
 } from "../api/api";
@@ -29,17 +30,24 @@ type Props = {
   setLoad: Dispatch<SetStateAction<boolean>>;
   load: boolean;
 };
-const Product = ({ name, item, user, setLoad, load }: any) => {
+const ProductFavorite = ({ name, item, user, setLoad, load }: any) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-
+  const [data, setData] = useState<any>();
   const handleCheckFavorite = async () => {
     const re = (await checkFavoriteProduct(item._id)) as any;
     if (re && re.data) {
-      setIsFavorite(re.data.checkProduct);
+      setIsFavorite(re.data?.checkProduct);
+    }
+  };
+  const fetchProductById = async () => {
+    const re = await callFetchProductById(item.product);
+    if (re && re.data) {
+      setData(re.data);
     }
   };
   useEffect(() => {
+    fetchProductById();
     handleCheckFavorite();
     return () => {};
   }, []);
@@ -73,11 +81,11 @@ const Product = ({ name, item, user, setLoad, load }: any) => {
   return (
     <View className="flex flex-row justify-center">
       <TouchableOpacity
-        key={item._id}
+        key={data?._id}
         className={`bg-white ${
           name === "Home" ? "w-[180px] mr-10" : `w-[170px]`
         } h-[352px] rounded-[30px] relative`}
-        onPress={() => navigation.navigate("Detail", { id: item._id })}
+        onPress={() => navigation.navigate("Detail", { id: data?._id })}
       >
         <Image
           source={{
@@ -93,10 +101,12 @@ const Product = ({ name, item, user, setLoad, load }: any) => {
         />
         <View className="mt-[210px] flex flex-col items-center justify-center">
           <Text className="font-bold">
-            {item.name.length > 20 ? item.name.slice(0, 20) + "..." : item.name}
+            {data?.name.length > 20
+              ? data?.name.slice(0, 20) + "..."
+              : data?.name}
           </Text>
-          <Text className="mt-[6px]">{item.brand}</Text>
-          <Text className="text-money">${item.price}</Text>
+          <Text className="mt-[6px]">{data?.brand}</Text>
+          <Text className="text-money">${data?.price}</Text>
           <View className="flex flex-row items-center justify-between mt-[10px] px-5">
             {name !== "Home" ? (
               <TouchableOpacity
@@ -122,4 +132,4 @@ const Product = ({ name, item, user, setLoad, load }: any) => {
   );
 };
 
-export default Product;
+export default ProductFavorite;

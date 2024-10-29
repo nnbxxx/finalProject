@@ -23,7 +23,7 @@ import {
 import { User } from "../types/type";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { userLogout } from "../api/api";
+import { getUserInfo, userLogout } from "../api/api";
 import ProfileInfo from "../components/ProfileInfor";
 
 type RouteParams = {
@@ -32,12 +32,31 @@ type RouteParams = {
 const ProfileScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const route = useRoute();
-
   const { profile } = route.params as RouteParams;
+  const [infoUser, setInfoUser] = useState<any>(profile);
 
   const { height } = useWindowDimensions();
   const modifiedHeight = height + 36;
-
+  const handleGetInfo = async () => {
+    const re = await getUserInfo(profile._id);
+    if (re && re.data) {
+      const { _id, name, email, gender, age, address, avatar } = re.data as any;
+      const iUser = {
+        _id,
+        name,
+        email,
+        gender,
+        age,
+        address,
+        avatar,
+      };
+      setInfoUser(iUser);
+    }
+  };
+  useEffect(() => {
+    handleGetInfo();
+    return () => {};
+  }, []);
   const handleLogout = async () => {
     const res = await userLogout();
     if (res && res.data) {
@@ -70,7 +89,7 @@ const ProfileScreen = () => {
             <Text className="text-main">Change</Text>
           </View>
           <View className="mt-[10px] mb-[30px]">
-            <ProfileInfo profile={profile} />
+            <ProfileInfo profile={infoUser} />
           </View>
           <View className="flex flex-col gap-[14px]">
             <TouchableOpacity

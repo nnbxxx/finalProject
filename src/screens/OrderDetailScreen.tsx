@@ -18,7 +18,8 @@ import {
 } from "@react-navigation/native";
 import { IAddress, IOrder } from "../types/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { getReceiptById } from "../api/api";
+import { getAddressUserDefault, getReceiptById } from "../api/api";
+import Toast from "react-native-toast-message";
 type Params = {
   id: string;
 };
@@ -37,17 +38,24 @@ const OrderDetailScreen = () => {
     const re: any = await getReceiptById(id);
     if (re && re.data) {
       setOrder(re.data);
+    } else {
+      const { message, statusCode } = re as any;
+      Toast.show({
+        type: "error",
+        text1: JSON.stringify(message),
+      });
     }
   };
+  const fetchDataAddressUser = async () => {
+    const re = (await getAddressUserDefault()) as any;
+    if (re && re.data) {
+      setAddress(re.data);
+    } else setAddress(undefined);
+  };
+
   useEffect(() => {
     callGetDetailReceipt();
-    const fetchAddress = async () => {
-      // const { data } = await axios.get(`/address/user/default?user=${user}`);
-      // if (data.success) {
-      //   setAddress(data.data);
-      // } else setAddress(undefined);
-    };
-    fetchAddress();
+    fetchDataAddressUser();
   }, []);
   return (
     <SafeAreaView>
@@ -69,7 +77,7 @@ const OrderDetailScreen = () => {
             </View>
             {address && (
               <View className="mt-[10px] mb-[20px]">
-                <Address data={address} />
+                <Address data={address as any} />
               </View>
             )}
             <Text className="font-medium w-full">Order Details</Text>
@@ -92,8 +100,7 @@ const OrderDetailScreen = () => {
                   <RadioButton
                     value="COD"
                     status={
-                      // order?.paymentMethod === "COD" ? "checked" : "unchecked"
-                      "checked"
+                      order?.paymentMethod === "COD" ? "checked" : "unchecked"
                     }
                   />
                   <Text className="text-lg ml-[10px]">COD</Text>
@@ -102,8 +109,7 @@ const OrderDetailScreen = () => {
                   <RadioButton
                     value="VNPAY"
                     status={
-                      // order?.paymentMethod === "VNPAY" ? "checked" : "unchecked"
-                      "unchecked"
+                      order?.paymentMethod === "VNPAY" ? "checked" : "unchecked"
                     }
                   />
                   <Text className="text-lg ml-[10px]">VNPay</Text>

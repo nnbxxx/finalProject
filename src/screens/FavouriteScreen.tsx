@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
@@ -9,34 +9,40 @@ import Product from "../components/Product";
 import Loading from "../components/Loading";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import Navbar from "../components/Navbar";
-
+import { callFetchListFavouriteProduct } from "../api/api";
+import { useRoute } from "@react-navigation/native";
+import ProductFavorite from "../components/ProductFavorite";
+type Params = {
+  id: string;
+};
 const FavoriteScreen = () => {
   const [items, setItems] = useState<IProduct[]>([]);
-
+  const route = useRoute();
+  const { id } = route.params as Params;
+  const [load, setLoad] = useState<boolean>(false);
+  const fetchItem = async () => {
+    const re = (await callFetchListFavouriteProduct()) as any;
+    if (re && re.data) {
+      setItems(re.data.items);
+      console.log("🚀 ~ fetchItem ~ re:", re.data.items);
+    }
+  };
   useEffect(() => {
-    // try {
-    //   const fetchItem = async () => {
-    //     const { data } = await axios.get(`/products/`);
-    //     if (data.success) {
-    //       setItems(data.data);
-    //     }
-    //     console.log(data);
-    //   };
-    //   fetchItem();
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  }, []);
+    fetchItem();
+  }, [load]);
   return (
     <SafeAreaView>
-      <View className="relative pt-[60px] px-[10px]">
-        <View className="relative px-[30px] flex flex-row items-center justify-center">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="relative h-screen px-5"
+      >
+        <View className="relative mt-10 px-5 flex flex-row items-center justify-center">
           <View className="absolute left-0">
             <ArrowLeftIcon size={24} color={"#000000"} />
           </View>
-          <Text className="font-medium textlg">Favorites</Text>
+          <Text className="font-medium text-lg">Favorites</Text>
         </View>
-        <View className="mt-5">
+        <View className="mt-10">
           {items.length === 0 ? (
             // <View className="flex flex-col items-center justify-center">
             //     <MagnifyingGlassIcon color="#C7C7C7" width={122} height={122} />
@@ -47,26 +53,34 @@ const FavoriteScreen = () => {
             // </View>
             <Loading />
           ) : (
+            // <></>
             <MasonryList
               data={items}
               keyExtractor={(item): string => item.id}
               numColumns={2}
               showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingTop: 20 }}
               renderItem={({ item }) => (
                 <View className="mb-[40px]">
-                  <Product name="Search" item={item as IProduct} />
+                  <ProductFavorite
+                    name="Search"
+                    item={item as IProduct}
+                    setLoad={setLoad}
+                    load={load}
+                  />
                 </View>
               )}
               // refreshing={isLoadingNext}
               // onRefresh={() => refetch({ first: ITEM_CNT })}
               onEndReachedThreshold={0.1}
-              contentContainerStyle={{ paddingBottom: 30 }}
+
               // onEndReached={() => loadNext(ITEM_CNT)}
             />
           )}
         </View>
         <Navbar name="Favorites" />
-      </View>
+      </ScrollView>
+      <Navbar name="Favorites" />
     </SafeAreaView>
   );
 };

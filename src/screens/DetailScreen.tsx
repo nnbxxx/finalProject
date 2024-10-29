@@ -146,6 +146,12 @@ const DetailScreen = () => {
               <Text className="text-xl text-money mb-[10px]">
                 ${item.price}
               </Text>
+              <Text className="mt-5 mb-[10px] font-bold text-xl">
+                {item.name}
+              </Text>
+              <Text className="text-xl text-money mb-[10px]">
+                ${item.price}
+              </Text>
               <View className="flex flex-row mb-10">
                 {/* <Rating readOnly value={5} size="small" className="mr-44px" /> */}
                 <Text>Sumbit a Review</Text>
@@ -158,12 +164,21 @@ const DetailScreen = () => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View className="w-[140px]">
-                  <TouchableOpacity>
-                    <Text className="font-semibold text-base text-center">
-                      Review
-                    </Text>
-                  </TouchableOpacity>
+                <View className="flex flex-row items-center">
+                  <View className="w-[140px] border-b-[3px] border-main">
+                    <TouchableOpacity>
+                      <Text className="text-main font-semibold text-base text-center">
+                        Infomation
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View className="w-[140px]">
+                    <TouchableOpacity>
+                      <Text className="font-semibold text-base text-center">
+                        Review
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
               <View className="p-5 w-full">

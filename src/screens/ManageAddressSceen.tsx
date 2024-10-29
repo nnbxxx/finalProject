@@ -10,6 +10,7 @@ import { ScrollView } from "react-native";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
+import { callCreateNewUserAddress } from "../api/api";
 
 const ManageAddressScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -32,22 +33,27 @@ const ManageAddressScreen = () => {
   };
 
   const handleCreate = async () => {
-    // const { data } = await axios.post("/address", {
-    //   user: userId,
-    //   receiver: address.receiver,
-    //   phone: address.phone,
-    //   province: address.province,
-    //   districts: address.districts,
-    //   wards: address.wards,
-    //   specific: address.specific,
-    //   default: isSwitchOn,
-    // });
-    // if (data.success) {
-    //   Toast.show({
-    //     type: "success",
-    //     text1: "Create Address Success",
-    //   });
-    // }
+    const re = await callCreateNewUserAddress({
+      user: userId,
+      receiver: address.receiver,
+      phone: address.phone,
+      province: address.province,
+      districts: address.districts,
+      wards: address.wards,
+      specific: address.specific,
+      isDefault: isSwitchOn,
+    });
+    if (re && re.data) {
+      Toast.show({
+        type: "success",
+        text1: "Create Address Success",
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Have Error",
+      });
+    }
   };
 
   useEffect(() => {
