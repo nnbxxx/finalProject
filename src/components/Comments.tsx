@@ -4,6 +4,7 @@ import { Rating } from "@kolking/react-native-rating";
 
 import { ICartItem, ItemCart } from "../types/type";
 import Toast from "react-native-toast-message";
+import { callCreateNewReviewProduct } from "../api/api";
 type Props = {
   setForm: Dispatch<SetStateAction<boolean>>;
   user: string;
@@ -11,33 +12,34 @@ type Props = {
 };
 const Comments = ({ setForm, user, product }: Props) => {
   const [rating, setRating] = useState<number>(0);
-  console.log(rating);
   const handleChange = useCallback((newRating: number) => {
     setRating(newRating);
   }, []);
+  const createNewReviewProduct = async (data: any) => {
+    const re = await callCreateNewReviewProduct(data);
+    return re;
+  };
   const handleSubmit = async () => {
-    // let i = 0;
-    // while (i < product.length) {
-    //   const form = new FormData();
-    //   form.append("commentator", user);
-    //   form.append("product", product[i].product);
-    //   form.append("rating", rating.toString());
-    //   try {
-    //     const { data } = await axios.post("/comments", form, {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     });
-    //     if (data.success) {
-    //       i++;
-    //     }
-    //   } catch (error) {
-    //     Toast.show({ type: "error", text1: "Product has reviewed" });
-    //   }
-    // }
-    // if (i === product.length) {
-    //   Toast.show({ type: "success", text1: "Review Success" });
-    // }
+    let i = 0;
+    while (i < product.length) {
+      const data = {
+        userId: user,
+        productId: product[i].product,
+        rating: rating.toString(),
+        comment: "good products",
+      };
+      const re = (await createNewReviewProduct(data)) as any;
+      if (re && re.data) {
+        i++;
+      } else {
+        break;
+      }
+    }
+    if (i === product.length) {
+      Toast.show({ type: "success", text1: "Review Success" });
+    } else {
+      Toast.show({ type: "error", text1: "Has Error" });
+    }
   };
   return (
     <View className="bg-white p-2 flex flex-col items-center justify-center">

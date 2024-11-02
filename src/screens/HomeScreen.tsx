@@ -78,7 +78,7 @@ const HomeScreen = () => {
     if (data && data.data) {
       setCategory(data.data.result);
     } else {
-      console.log("🚀 ~ fetchListItems ~ data:", data);
+      // console.log("🚀 ~ fetchListItems ~ data:", data);
     }
   };
   const fetchCartData = async () => {
@@ -86,7 +86,7 @@ const HomeScreen = () => {
     if (res && res.data) {
       setCartSize(res.data.items.length);
     } else {
-      console.log("🚀 ~ fetchData ~ res:", JSON.stringify(res.data.items));
+      // console.log("🚀 ~ fetchData ~ res:", JSON.stringify(res.data.items));
     }
   };
   const fetchListItems = async () => {
@@ -97,7 +97,7 @@ const HomeScreen = () => {
     if (data && data.data) {
       setItems(data.data.result);
     } else {
-      console.log("🚀 ~ fetchListItems ~ data:", data);
+      // console.log("🚀 ~ fetchListItems ~ data:", data);
     }
     const dataHot: any = await callFetchListProduct(
       "current=1&pageSize=10&sort=-quantitySold"
@@ -117,7 +117,7 @@ const HomeScreen = () => {
     if (data && data.data) {
       setItems(data.data.result);
     } else {
-      console.log("🚀 ~ fetchListItems ~ data:", data);
+      // console.log("🚀 ~ fetchListItems ~ data:", data);
     }
   };
   useEffect(() => {
@@ -209,7 +209,7 @@ const HomeScreen = () => {
                 ))}
             </View>
           </ScrollView>
-          <View className="mt-[30px] pl-10">
+          <View className="mt-[30px] ">
             <View className="pr-5 mb-[5px]">
               <Text
                 className="text-xs text-main text-right"
@@ -225,7 +225,7 @@ const HomeScreen = () => {
                 <FlatList
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={{ paddingTop: 20 }}
+                  contentContainerStyle={{ paddingTop: 20, paddingLeft: 40 }}
                   data={items}
                   keyExtractor={(item: any, idx) => item._id + idx}
                   renderItem={({ item }) => (
@@ -242,8 +242,8 @@ const HomeScreen = () => {
               </View>
             </View>
           </View>
-          <View className="mt-[50px] pl-10 mb-[100px]">
-            <View className="flex flex-row justify-between items-center pr-5 mb-[5px]">
+          <View className="mt-[50px] mb-[100px]">
+            <View className="flex flex-row justify-between items-center pl-10 pr-5 mb-[5px]">
               <Text className="font-bold text-xl tracking-[4px] text-main">
                 HOT
               </Text>
@@ -255,7 +255,7 @@ const HomeScreen = () => {
               <FlatList
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingTop: 20 }}
+                contentContainerStyle={{ paddingTop: 20, paddingLeft: 40 }}
                 data={hots}
                 keyExtractor={(item: any, idx) => item._id + idx}
                 renderItem={({ item }) => (

@@ -18,7 +18,11 @@ import {
 } from "@react-navigation/native";
 import { IAddress, IOrder } from "../types/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { getAddressUserDefault, getReceiptById } from "../api/api";
+import {
+  getAddressUserDefault,
+  getReceiptById,
+  returnReceipt,
+} from "../api/api";
 
 import Toast from "react-native-toast-message";
 type Params = {
@@ -53,7 +57,19 @@ const OrderDetailScreen = () => {
       setAddress(re.data);
     } else setAddress(undefined);
   };
-
+  const handleReturnReceipt = async () => {
+    const re = (await returnReceipt({ id })) as any;
+    if (re && re.data) {
+      navigation.goBack();
+      Toast.show({ type: "success", text1: "Return success" });
+    } else {
+      Toast.show({
+        type: "error",
+        text1:
+          "Hóa đơn đã xác nhận không thể hủy được, vui long liên hệ cửa hàng hoặc admin",
+      });
+    }
+  };
   useEffect(() => {
     callGetDetailReceipt();
     fetchDataAddressUser();
@@ -74,11 +90,18 @@ const OrderDetailScreen = () => {
             </View>
             <View className="w-full flex flex-row items-center justify-between">
               <Text className="font-medium text-base">Delivery Address</Text>
-              <Text className="text-main">Change</Text>
+              <Text className="font-medium text-main">
+                Pay: {order?.isCheckout ? "Has pay" : "Not Yet"}
+              </Text>
             </View>
             {address && (
               <View className="mt-[10px] mb-[20px]">
-                <Address data={address as any} />
+                <Address
+                  data={address as any}
+                  setAddress={() => {}}
+                  type="View"
+                  setOpen={() => {}}
+                />
               </View>
             )}
             <Text className="font-medium w-full">Order Details</Text>
@@ -103,6 +126,7 @@ const OrderDetailScreen = () => {
                     status={
                       order?.paymentMethod === "COD" ? "checked" : "unchecked"
                     }
+                    disabled
                   />
                   <Text className="text-lg ml-[10px]">COD</Text>
                 </View>
@@ -112,6 +136,7 @@ const OrderDetailScreen = () => {
                     status={
                       order?.paymentMethod === "VNPAY" ? "checked" : "unchecked"
                     }
+                    disabled
                   />
                   <Text className="text-lg ml-[10px]">VNPay</Text>
                 </View>
@@ -122,7 +147,7 @@ const OrderDetailScreen = () => {
               </View>
               <TouchableOpacity
                 className="w-full h-[60px] bg-main rounded-[30px] flex items-center justify-center mb-5"
-                // onPress={handleOrder}
+                onPress={handleReturnReceipt}
               >
                 <Text className="font-bold text-xl text-white tracking-widest">
                   Return

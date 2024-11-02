@@ -20,6 +20,12 @@ export const getUserInfo = (_id: string) => {
 export const getAddressUserDefault = () => {
     return instance.get<IBackendRes<any>>(`address-user/user/default-address`)
 }
+export const updateAddressUserDefault = (id: string) => {
+    return instance.patch<IBackendRes<any>>(`/address-user/user/default/${id}`);
+}
+export const removeAddressUser = (id: string) => {
+    return instance.delete<IBackendRes<any>>(`/address-user/user/remove/${id}`);
+}
 export const userLogout = () => {
     return instance.post<IBackendRes<string>>("auth/logout")
 }
@@ -35,8 +41,6 @@ export const userRetryPassword = (email: string) => {
 export const userChangePassword = (email: string, code: string, password: string, newPassword: string) => {
     return instance.post<IBackendRes<any>>("auth/retry-password", { email, code, password, newPassword })
 }
-
-
 
 export const callFetchListProduct = (query: string) => {
     return instance.get<IBackendRes<IModelPaginate<IProduct>>>(`products?populate=category&fields=category.name&${query}`);
@@ -60,9 +64,15 @@ export const addFavoriteProduct = (data: any) => {
 export const removeFavoriteProduct = (id: string) => {
     return instance.delete<IBackendRes<any>>(`like-products/${id}`)
 }
+export const fetchCommentProduct = (id: string) => {
+    return instance.get<IBackendRes<any>>(`reviews?current=1&pageSize=1111&productId=${id}`);
+}
 
 export const getCartByUser = () => {
     return instance.get<IBackendRes<ICart>>(`carts/user`)
+}
+export const getCouponsByUser = (id: string) => {
+    return instance.get<IBackendRes<any>>(`users/coupon/${id}`)
 }
 export const removeCartItemUser = (id: string) => {
     return instance.delete<IBackendRes<ICart>>(`carts/${id}`)
@@ -73,12 +83,24 @@ export const addCartItemUser = (product: any) => {
 export const checkoutReceipt = (data: any) => {
     return instance.post<IBackendRes<any>>(`receipts`, data)
 }
+export const unactiveCouponReceipt = (id: string, data: any) => {
+    return instance.post<IBackendRes<any>>(`receipts/coupon/unactive/${id}`, data);
+}
+export const activeCouponReceipt = (id: string, data: any) => {
+    return instance.post<IBackendRes<any>>(`receipts/coupon/active/${id}`, data);
+}
+
 export const callFetchListReceipt = (query: string) => {
     return instance.get<IBackendRes<IModelPaginate<any>>>(`receipts?current=1&pageSize=999?${query}`);
 }
 export const getReceiptById = (id: string) => {
     return instance.get<IBackendRes<IOrder>>(`receipts/${id}`)
 }
+export const returnReceipt = (data: any) => {
+    return instance.post<IBackendRes<any>>(`receipts/user/return`, data)
+}
+
+
 export const callCreateNewUserAddress = (data: Address) => {
     return instance.post<IBackendRes<any>>(`/address-user`, data)
 }
@@ -86,3 +108,6 @@ export const callFetchListUserAddress = (userId: string) => {
     return instance.get<IBackendRes<IModelPaginate<any>>>(`address-user?current=1&pageSize=111&user=${userId}`)
 }
 
+export const callCreateNewReviewProduct = (data: any) => {
+    return instance.post<IBackendRes<any>>(`reviews`, data);
+}

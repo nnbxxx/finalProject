@@ -118,7 +118,7 @@ export interface IProduct {
     description: string;
     shopName: string;
     rating: string;
-    image: any;
+    images: any;
     createdBy: string;
     isDeleted: boolean;
     deletedAt: boolean | null;
@@ -290,20 +290,22 @@ export type upUser = {
 
 export type Comment = {
     _id: string;
-    commentator: Commentator;
-    product: string;
-    rating: number;
-    like: number;
-    images: string;
+    user: {
+        avatar: string,
+        name: string
+    };
+    product: {
+
+    };
+    rating: string;
+    // like: number;
+    // images: string;
 };
-export type Commentator = {
-    _id: string;
-    fullName: string;
-    avatar: string;
-};
+
 export type Coupon = {
     _id: string;
     code: string;
     name: string;
+    isActive: boolean;
 
 };

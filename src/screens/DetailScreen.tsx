@@ -24,10 +24,15 @@ import ProductInfo from "../components/ProductInfo";
 import { HeartIcon } from "react-native-heroicons/outline";
 import { IProduct, RVariant, User } from "../types/type";
 
-import Comfirm from "../components/Comfirm";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { imgProductDefault } from "../utils/imageDefault";
-import { callFetchProductById } from "../api/api";
+import {
+  addFavoriteProduct,
+  callFetchProductById,
+  checkFavoriteProduct,
+  fetchCommentProduct,
+  removeFavoriteProduct,
+} from "../api/api";
 import {
   ParamListBase,
   useNavigation,
@@ -37,6 +42,7 @@ import { Rating } from "@kolking/react-native-rating";
 import { HeartIcon as NoF } from "react-native-heroicons/outline";
 import { HeartIcon as F } from "react-native-heroicons/solid";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Confirm from "../components/Confirm";
 type RouteParams = {
   id: string;
 };
@@ -49,6 +55,21 @@ const DetailScreen = () => {
   const [form, setForm] = useState(false);
   const [load, setLoad] = useState(false);
   const [comment, setComment] = useState<Comment[]>();
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const route = useRoute();
+  const { id } = route.params as RouteParams;
+
+  const [item, setItem] = useState<IProduct>();
+  const [active, setActive] = useState(false);
+  const [profile, setProfile] = useState<User>();
+
+  const containerRef = useRef<View>(null);
+  const handleCheckFavorite = async () => {
+    const re = (await checkFavoriteProduct(id)) as any;
+    if (re && re.data) {
+      setIsFavorite(re.data.checkProduct);
+    }
+  };
   const onViewableItemsChanged = ({
     viewableItems,
   }: {
@@ -63,48 +84,40 @@ const DetailScreen = () => {
       navigation.navigate("Login");
       return;
     }
-    // if (item) {
-    //   if (item.isFavorite) {
-    //     const { data } = await axios.delete(
-    //       `/favorites/un-favorite/${item._id}`
-    //     );
-    //     if (data.success) {
-    //       setLoad(!load);
-    //     }
-    //   } else {
-    //     const { data } = await axios.post("/favorites", {
-    //       user: profile._id,
-    //       product: item._id,
-    //     });
-    //     if (data.success) {
-    //       setLoad(!load);
-    //     }
-    //   }
-    // }
+    if (isFavorite) {
+      const re = await removeFavoriteProduct(id);
+      if (re && re.data) {
+        setLoad(!load);
+        setIsFavorite(!isFavorite);
+      }
+    } else {
+      const re = await addFavoriteProduct({
+        product: {
+          _id: id,
+          name: item?.name,
+        },
+      });
+
+      if (re && re.data) {
+        setLoad(!load);
+        setIsFavorite(!isFavorite);
+      }
+    }
+  };
+  const callFetchCommentProduct = async () => {
+    const re = (await fetchCommentProduct(id)) as any;
+    if (re && re.data) {
+      setComment(re.data.result);
+    }
   };
   useEffect(() => {
-    const fetchData = async () => {
-      // const { data } = await axios.get(`/comments/find/by-product?product=${id}`);
-      // if (data.success) {
-      //     setComment(data.data);
-      // }
-    };
-    fetchData();
+    callFetchCommentProduct();
   }, [load]);
   const onScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       x.value = event.contentOffset.x;
     },
   });
-
-  const route = useRoute();
-  const { id } = route.params as RouteParams;
-
-  const [item, setItem] = useState<IProduct>();
-  const [active, setActive] = useState(false);
-  const [profile, setProfile] = useState<User>();
-
-  const containerRef = useRef<View>(null);
 
   const handlePressOutside = () => {
     setActive(false);
@@ -128,118 +141,100 @@ const DetailScreen = () => {
       console.log("🚀 ~ fetchProductDetail ~ data:", data);
     }
   };
+  const getProfile = async () => {
+    const user = await AsyncStorage.getItem("user");
+    if (user) {
+      const userObject = JSON.parse(user);
+      setProfile(userObject);
+    }
+  };
   useEffect(() => {
-    fetchProductDetail();
-    //   const fetchItem = async () => {
-    //     const { data } = await axios.get(`/products/detail?product=${id}`);
-    //     if (data.success) {
-    //       setItem(data.data.product);
-    //       setRVariant(data.data.randomVar);
-    //       setListVariant(data.data.variants);
-    //     }
-    //   };
-    //   fetchItem();
-  }, []);
-  useEffect(() => {
-    const getProfile = async () => {
-      const user = await AsyncStorage.getItem("user");
-      if (user) {
-        const userObject = JSON.parse(user);
-        setProfile(userObject);
-      }
-    };
     getProfile();
+    fetchProductDetail();
+    handleCheckFavorite();
   }, []);
 
   return (
     <SafeAreaView className="bg-background">
       <ScrollView showsVerticalScrollIndicator={false} className="relative">
         {item && (
-          <TouchableWithoutFeedback onPress={handlePressOutside}>
-            <View className="flex flex-col items-center justify-center">
-              <Animated.FlatList
-                ref={flatListRef}
-                onScroll={onScroll}
-                data={imgProductDefault.uri}
-                renderItem={({ item, index }) => {
-                  return <Image key={item} item={item} index={index} x={x} />;
-                }}
-                keyExtractor={(item) => item.id}
-                scrollEventThrottle={16}
-                horizontal={true}
-                bounces={false}
-                pagingEnabled={true}
-                showsHorizontalScrollIndicator={false}
-                onViewableItemsChanged={onViewableItemsChanged}
-                viewabilityConfig={{
-                  minimumViewTime: 300,
-                  viewAreaCoveragePercentThreshold: 10,
-                }}
-              />
-              <View>
-                {/* {item?.image && <Pagination item={item.image} x={x} />} */}
-                <Pagination item={[imgProductDefault.uri]} x={x} />
+          // < onPress={handlePressOutside}>
+          <View
+            className="flex flex-col items-center justify-center"
+            onTouchEnd={handlePressOutside}
+          >
+            <Animated.FlatList
+              ref={flatListRef}
+              onScroll={onScroll}
+              data={item.images}
+              renderItem={({ item, index }) => {
+                return <Image key={item} item={item} index={index} x={x} />;
+              }}
+              keyExtractor={(item) => item.id}
+              scrollEventThrottle={16}
+              horizontal={true}
+              bounces={false}
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={false}
+              onViewableItemsChanged={onViewableItemsChanged}
+              viewabilityConfig={{
+                minimumViewTime: 300,
+                viewAreaCoveragePercentThreshold: 10,
+              }}
+            />
+            <View>
+              {item?.images && <Pagination item={item.images} x={x} />}
+            </View>
+            <Text className="mt-5 mb-[10px] font-bold text-xl">
+              {item.name}
+            </Text>
+            <Text className="text-xl text-money mb-[10px]">${item.price}</Text>
+            <View className="flex flex-row mb-10">
+              <Rating baseColor="#FF952D" disabled size={18} rating={5} />
+              {/* <Text>Sumbit a Review</Text> */}
+            </View>
+            <View className="flex flex-row items-center">
+              <View
+                className={`w-[140px] ${
+                  form ? "" : "border-b-[3px] border-main"
+                }`}
+              >
+                <TouchableOpacity onPress={() => setForm(false)}>
+                  <Text
+                    className={`${
+                      form ? "" : "text-main"
+                    } font-semibold text-base text-center`}
+                  >
+                    Infomation
+                  </Text>
+                </TouchableOpacity>
               </View>
-
-              <Text className="mt-5 mb-[10px] font-bold text-xl">
-                {item.name}
-              </Text>
-              <Text className="text-xl text-money mb-[10px]">
-                ${item.price}
-              </Text>
-              <Text className="mt-5 mb-[10px] font-bold text-xl">
-                {item.name}
-              </Text>
-              <Text className="text-xl text-money mb-[10px]">
-                ${item.price}
-              </Text>
-              <View className="flex flex-row mb-10">
-                <Rating baseColor="#FF952D" disabled size={18} rating={5} />
-                {/* <Text>Sumbit a Review</Text> */}
-              </View>
-              <View className="flex flex-row items-center">
-                <View
-                  className={`w-[140px] ${
-                    form ? "" : "border-b-[3px] border-main"
-                  }`}
-                >
-                  <TouchableOpacity onPress={() => setForm(false)}>
-                    <Text
-                      className={`${
-                        form ? "" : "text-main"
-                      } font-semibold text-base text-center`}
-                    >
-                      Infomation
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View
-                  className={`w-[140px] ${
-                    form ? "border-b-[3px] border-main" : ""
-                  }`}
-                >
-                  <TouchableOpacity onPress={() => setForm(true)}>
-                    <Text
-                      className={`${
-                        form ? "text-main" : ""
-                      } font-semibold text-base text-center`}
-                    >
-                      Review
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View className="p-5 w-full">
-                <View className="w-full h-[302px] bg-white mt-[10px] mb-40 rounded-[10px]">
-                  {form ? (
-                    <Review comment={comment as any} />
-                  ) : (
-                    <ProductInfo info={item.description} />
-                  )}
-                </View>
+              <View
+                className={`w-[140px] ${
+                  form ? "border-b-[3px] border-main" : ""
+                }`}
+              >
+                <TouchableOpacity onPress={() => setForm(true)}>
+                  <Text
+                    className={`${
+                      form ? "text-main" : ""
+                    } font-semibold text-base text-center`}
+                  >
+                    Review
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-          </TouchableWithoutFeedback>
+            <View className="p-5 w-full">
+              <View className="w-full h-[302px] bg-white mt-[10px] mb-40 rounded-[10px]">
+                {form ? (
+                  <Review comment={comment as any} />
+                ) : (
+                  <ProductInfo info={item.description} />
+                )}
+              </View>
+            </View>
+          </View>
         )}
 
         <View className="absolute bottom-0 w-full mb-10">
@@ -258,8 +253,8 @@ const DetailScreen = () => {
             )}
           </View>
         </View>
-        {active && <Comfirm id={id} item={item} user={profile?._id} />}
       </ScrollView>
+      {active && <Confirm id={id} item={item} user={profile?._id} />}
     </SafeAreaView>
   );
 };

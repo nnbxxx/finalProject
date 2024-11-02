@@ -31,7 +31,7 @@ const FavoriteScreen = () => {
     const re = (await callFetchListFavouriteProduct()) as any;
     if (re && re.data) {
       setItems(re.data.items);
-      console.log("🚀 ~ fetchItem ~ re:", re.data.items);
+      
     }
   };
   useEffect(() => {

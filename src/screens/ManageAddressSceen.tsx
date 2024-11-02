@@ -9,15 +9,24 @@ import { ScrollView } from "react-native";
 
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { ParamListBase, useNavigation } from "@react-navigation/native";
+import {
+  ParamListBase,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { callCreateNewUserAddress } from "../api/api";
 
+type Params = {
+  type: string;
+};
 const ManageAddressScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const route = useRoute();
+  const { type } = route.params as Params;
   const [address, setAddress] = useState({
-    user: "",
+    user: type === "Add" ? " " : "",
     districts: "",
     phone: "",
     province: "",
@@ -80,7 +89,11 @@ const ManageAddressScreen = () => {
           >
             <ArrowLeftIcon size={24} color={"#000000"} />
           </TouchableOpacity>
-          <Text className="font-medium text-xl">Add New Address</Text>
+          {type === "Add" ? (
+            <Text className="font-medium text-xl">Add New Address</Text>
+          ) : (
+            <Text className="font-medium text-xl">Update Address</Text>
+          )}
         </View>
         <View className="flex flex-col gap-10 px-[10px] mt-10">
           <View className="pb-[5px] border-b">

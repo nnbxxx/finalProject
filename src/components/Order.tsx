@@ -22,7 +22,7 @@ const Order = ({ item, setForm, setProduct }: Props) => {
         navigation.navigate("OrderDetail", { id: item._id, user: item.user })
       }
     >
-      <View className="p-[10px] bg-white rounded-[5px]">
+      <View className="p-[10px] bg-white rounded-[5px] mb-[10px]">
         {item.items &&
           item.items.map((order, i) => (
             <View
@@ -44,31 +44,25 @@ const Order = ({ item, setForm, setProduct }: Props) => {
                   ${order.price}
                 </Text>
                 <View className="flex flex-row items-center justify-between">
-                  {/* <Text className="text-xs">Size: {order.size}</Text>
-                  <View className="flex flex-row items-center mx-[15px]">
-                    <Text className="text-xs">Color:</Text>
-                    <View className="relative w-[10px] h-[10px] bg-[#FFBE00] rounded-full ml-[5px]">
-                      <View className="absolute left-[-2px] top-[-2px] p-[5px] rounded-full border-2 border-gray1"></View>
-                    </View>
-                  </View> */}
                   <Text className="text-xs">x{order.quantity}</Text>
                 </View>
               </View>
             </View>
           ))}
-        <View className="mt-[10px] w-full flex flex-row items-center justify-between">
+        <View className="mt-[10px] w-full flex flex-col items-start space-y-2">
           <Text className="text-xs text-main">
             {item.isCheckout ? `Đã thanh toán` : `Chưa thanh toán`}
           </Text>
           <Text className="text-xs text-main">{item.statusUser}</Text>
           <Text className="text-money">Total: {item.total} VNĐ</Text>
-          {item.statusSupplier === RECEIPT_STATUS.DELIVERED && (
-            <TouchableOpacity onPress={handleClick}>
-              <View className="w-[80px] h-8 bg-main rounded-2xl flex items-center justify-center">
-                <Text className="text-xs text-white">Review</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          {item.statusSupplier === RECEIPT_STATUS.DELIVERED &&
+            item.statusUser === RECEIPT_STATUS.CONFIRMED && (
+              <TouchableOpacity onPress={handleClick}>
+                <View className="w-[80px] h-8 bg-main rounded-2xl flex items-center justify-center">
+                  <Text className="text-xs text-white">Review</Text>
+                </View>
+              </TouchableOpacity>
+            )}
         </View>
       </View>
     </TouchableOpacity>

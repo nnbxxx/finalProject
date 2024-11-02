@@ -13,7 +13,7 @@ type Props = {
   user: string | undefined;
 };
 
-const Comfirm = ({ id, item, user }: Props) => {
+const Confirm = ({ id, item, user }: Props) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [items, setItems] = useState<IProduct>(item as IProduct);
   const [quantity, setQuantity] = useState<number>(1);
@@ -93,7 +93,7 @@ const Comfirm = ({ id, item, user }: Props) => {
           <TouchableOpacity onPress={handleAddCart}>
             <View className="w-full h-[60px] bg-main rounded-[30px] flex items-center justify-center">
               <Text className="text-white text-xl font-bold tracking-[4px]">
-                Comfirm
+                Confirm
               </Text>
             </View>
           </TouchableOpacity>
@@ -103,4 +103,4 @@ const Comfirm = ({ id, item, user }: Props) => {
   );
 };
 
-export default Comfirm;
+export default Confirm;

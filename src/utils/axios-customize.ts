@@ -11,7 +11,7 @@ const handleRefreshToken = async () => {
 
 const instance = axios.create({
     // baseURL: 'https://be-tlcn.onrender.com/api/v1/',
-    baseURL: 'https://6f1b-2001-ee0-264-a21a-b916-11f7-6070-2c1b.ngrok-free.app/api/v1/',
+    baseURL: 'https://a7c4-171-232-236-246.ngrok-free.app/api/v1/',
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -65,4 +65,4 @@ instance.interceptors.response.use(function (response) {
 });
 
 
-export default instance 
+export default instance

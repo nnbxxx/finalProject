@@ -12,6 +12,7 @@ import Loading from "../components/Loading";
 import MasonryList from "@react-native-seoul/masonry-list";
 import Coupon from "../components/Coupon";
 import { Coupon as C } from "../types/type";
+import { getCouponsByUser } from "../api/api";
 type Params = {
   id: string;
 };
@@ -24,14 +25,18 @@ const CouponScreen = () => {
   const route = useRoute();
   const { id } = route.params as Params;
   const [items, setItems] = useState<C[]>();
+  const fetchCouponsByUser = async () => {
+    const re = (await getCouponsByUser(id)) as any;
+
+    if (re && re.data) {
+      const inactiveCoupons = re.data.couponsUser.filter(
+        (coupon: any) => coupon.isActive === false
+      );
+      setItems(inactiveCoupons);
+    }
+  };
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const { data } = await axios.get(`/coupons/find/by-user?user=${id}`);
-    //   if (data.success) {
-    //     setItems(data.data);
-    //   }
-    // };
-    // fetchData();
+    fetchCouponsByUser();
   }, []);
   return (
     <SafeAreaView>

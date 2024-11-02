@@ -8,7 +8,7 @@ const RecoveryPasswordScreen = () => {
     <SafeAreaView>
       <View className="p-10">
         <View className="relative h-screen mt-5 mb-[150px] flex flex-row items-center justify-center">
-          <View>
+          <View className="relative h-screen mt-5 mb-[150px] flex flex-row items-center justify-center w-full">
             <ArrowLeftIcon
               className="absolute left-0"
               color={"#000000"}

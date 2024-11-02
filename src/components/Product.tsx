@@ -17,11 +17,12 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { imgProductDefault } from "../utils/imageDefault";
 import { IProduct } from "../types/type";
 import {
+  addCartItemUser,
   addFavoriteProduct,
   checkFavoriteProduct,
   removeFavoriteProduct,
 } from "../api/api";
-
+import Toast from "react-native-toast-message";
 type Props = {
   name: string;
   item: IProduct;
@@ -70,6 +71,29 @@ const Product = ({ name, item, user, setLoad, load }: any) => {
       }
     }
   };
+  const handleAddCart = async (e: GestureResponderEvent) => {
+    e.stopPropagation();
+    const product = {
+      _id: item?._id,
+      name: item?.name,
+      price: item?.price,
+      quantity: 1,
+    };
+    const re = await addCartItemUser(product);
+    if (re.data) {
+      Toast.show({
+        type: "success",
+        text1: "Add to Cart Success",
+      });
+      navigation.replace("Cart", { user: user });
+    } else {
+      const { message, statusCode } = re as any;
+      Toast.show({
+        type: "error",
+        text1: JSON.stringify(message),
+      });
+    }
+  };
   return (
     <View className="flex flex-row justify-center">
       <TouchableOpacity
@@ -103,6 +127,7 @@ const Product = ({ name, item, user, setLoad, load }: any) => {
                 className={`w-[100px] h-8 rounded-[36px] bg-main flex items-center justify-center ${
                   name === "Home" ? "mr-5" : "mr-2"
                 }`}
+                onPress={handleAddCart}
               >
                 <Text className="text-white">Add To Cart</Text>
               </TouchableOpacity>

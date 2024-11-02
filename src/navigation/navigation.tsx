@@ -62,7 +62,7 @@ const AppNavigation = () => {
         ></Stack.Screen>
         <Stack.Screen
           name="ManageAddress"
-          component={ManageAddressScreen}
+          component={ManageAddressScreen as any}
         ></Stack.Screen>
         <Stack.Screen name="Order" component={OrdersScreen}></Stack.Screen>
         <Stack.Screen
