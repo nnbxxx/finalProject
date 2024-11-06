@@ -79,6 +79,10 @@ const Product = ({ name, item, user, setLoad, load }: any) => {
       price: item?.price,
       quantity: 1,
     };
+    if (!user) {
+      navigation.navigate("Login");
+      return;
+    }
     const re = await addCartItemUser(product);
     if (re.data) {
       Toast.show({

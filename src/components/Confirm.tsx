@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { IProduct } from "../types/type";
-// import axios from "../utils/axios";
 import Toast from "react-native-toast-message";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";

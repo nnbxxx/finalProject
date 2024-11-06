@@ -17,9 +17,10 @@ import { User } from "../types/type";
 
 type Props = {
   name: string;
+  load: boolean;
 };
 
-const Navbar = ({ name }: Props) => {
+const Navbar = ({ name, load }: Props) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const [profile, setProfile] = useState<User>();

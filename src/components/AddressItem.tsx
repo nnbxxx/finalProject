@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { Switch } from "react-native-paper";
 import { Address } from "../types/type";
 import Toast from "react-native-toast-message";
+import { removeAddressUser } from "../api/api";
 type Props = {
   item: Address;
   setLoad: Dispatch<SetStateAction<boolean>>;
@@ -16,14 +17,20 @@ const AddressItem = ({
   setAddressDefault,
 }: Props) => {
   const handleDelete = async (id: string) => {
-    // const { data } = await axios.delete(`/deliveryAddress/${id}`);
-    // if (data.success) {
-    //   setLoad((prev) => !prev);
-    //   Toast.show({
-    //     type: "success",
-    //     text1: "Delete Address success",
-    //   });
-    // }
+    const re = (await removeAddressUser(id)) as any;
+    console.log("🚀 ~ handleDelete ~ re:", re);
+    if (re && re.data) {
+      setLoad((prev) => !prev);
+      Toast.show({
+        type: "success",
+        text1: "Delete Address success",
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: re.message,
+      });
+    }
   };
   const [isSwitchOn, setIsSwitchOn] = useState(item.isDefault);
   const onToggleSwitch = (id: string) => {

@@ -31,16 +31,19 @@ const Loading = ({ name }: Props) => {
         </Text>
       </View>
     );
-  } else if (name === "Coupon") {
-    <View className="flex-1 flex justify-center items-center">
-      <CircleStackIcon size={100} color="#C7C7C7" />
-      <Text className="font-medium text-3xl">No coupons yet</Text>
-    </View>;
+  }
+  if (name === "Favorite") {
+    return (
+      <View className="flex-1 flex justify-center items-center">
+        <CircleStackIcon size={100} color="#C7C7C7" />
+        <Text className="font-medium text-3xl">No favorites yet</Text>
+      </View>
+    );
   }
   return (
     <View className="flex-1 flex justify-center items-center">
-      <HeartIcon size={100} color="#C7C7C7" />
-      <Text className="font-medium text-3xl">No favorites yet</Text>
+      <CircleStackIcon size={100} color="#C7C7C7" />
+      <Text className="font-medium text-3xl">No coupons yet</Text>
     </View>
   );
 };

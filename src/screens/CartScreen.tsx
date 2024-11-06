@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CartItem from "../components/CartItem";
 import { Checkbox } from "react-native-paper";
@@ -16,6 +16,7 @@ import { getCartByUser, removeCartItemUser } from "../api/api";
 
 type RouteParams = {
   user: string;
+  setCartCount: Dispatch<SetStateAction<boolean>>;
 };
 
 const CartScreen = () => {
@@ -28,6 +29,7 @@ const CartScreen = () => {
   const [checkedAll, setCheckedAll] = useState<boolean>(false);
   const [selectedCart, setSelectedCart] = useState<ICartItem[]>([]);
   const [total, setTotal] = useState(0);
+  const [load, setLoad] = useState(false);
   const fetchData = async () => {
     const res = await getCartByUser();
     if (res && res.data) {
@@ -91,6 +93,7 @@ const CartScreen = () => {
         text1: "Delete Item Success",
       });
       setCart(re.data.items);
+      setLoad((prev) => !prev);
     } else {
       const { message, statusCode } = re as any;
       Toast.show({

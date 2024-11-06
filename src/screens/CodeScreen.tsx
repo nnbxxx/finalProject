@@ -51,6 +51,7 @@ const CodeScreen = () => {
         type: "error",
         text1: message,
       });
+      navigation.replace("Register");
     }
   };
   return (

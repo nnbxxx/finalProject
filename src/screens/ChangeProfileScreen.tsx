@@ -20,8 +20,9 @@ import ImagePicker from "react-native-image-crop-picker";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { User } from "../types/type";
-import { getUserInfo } from "../api/api";
+import { getProfileUser, getUserInfo, updateUserProfile } from "../api/api";
 import { avtDefault } from "../utils/imageDefault";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 type Params = {
   profile: User;
 };
@@ -54,6 +55,8 @@ const ChangeProfileScreen = () => {
     const formData = new FormData();
     formData.append("file", image);
     formData.append("user", profile._id);
+    console.log("🚀 ~ handleUpload ~ image:", image);
+
     // const { data } = await axios.patch('/users/upload-avatar', {
     //     headers: {
     //         'Content-Type': 'multipart/form-data',
@@ -69,17 +72,24 @@ const ChangeProfileScreen = () => {
   const handleUpdate = async () => {
     const { email, ...withoutEmail } = profile;
     const item = {
-      ...withoutEmail,
+      name: user.name,
       gender: checked,
     };
-    // const { data } = await axios.patch('/users');
-    // if (data.success) {
-    //     Toast.show({
-    //         type: 'success',
-    //         text1: 'Update info success',
-    //     });
-    //     navigation.replace('Profile');
-    // }
+    const re = await updateUserProfile(item);
+    if (re && re.data) {
+      Toast.show({
+        type: "success",
+        text1: "Update info success",
+      });
+      const newProfile = (await getProfileUser()) as any;
+      if (newProfile && newProfile.data) {
+        await AsyncStorage.setItem(
+          "user",
+          JSON.stringify(newProfile.data.user)
+        );
+      }
+      navigation.replace("Profile", { profile: newProfile.data.user });
+    }
   };
   const handleGetInfo = async () => {
     const re = await getUserInfo(profile._id);
@@ -121,7 +131,7 @@ const ChangeProfileScreen = () => {
               borderRadius={10}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleUpdate}>
+          <TouchableOpacity onPress={handleUpload}>
             <View className="px-[60px] h-[50px] w-full bg-main rounded-[30px] flex justify-center">
               <Text className="font-bold tracking-widest text-white">
                 Upoad Avatar
@@ -131,7 +141,9 @@ const ChangeProfileScreen = () => {
           <View className="flex gap-[30px] flex-col items-center justify-center mt-10 mb-10 w-full pb-[60px]">
             <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
               <Text className="text-sm opacity-40">Email</Text>
-              <Text className="tracking-wider text-base">{user.email}</Text>
+              <Text className="tracking-wider text-base" disabled>
+                {user.email}
+              </Text>
             </View>
             <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
               <Text className="text-sm opacity-40">FullName</Text>
@@ -141,15 +153,7 @@ const ChangeProfileScreen = () => {
                 className="tracking-wider text-base"
               ></TextInput>
             </View>
-            <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
-              <Text className="text-sm opacity-40">Phone Number</Text>
-              <TextInput
-                value={user.phone}
-                onChangeText={(e) => handleChange("phone", e)}
-                secureTextEntry
-                className="tracking-wider text-base"
-              ></TextInput>
-            </View>
+
             <View className="flex flex-row items-center justify-around w-full h-[60px]">
               <View className="flex flex-row items-center">
                 <RadioButton

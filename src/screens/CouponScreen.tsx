@@ -62,7 +62,7 @@ const CouponScreen = () => {
             //         Try searching the item with a different keyword.
             //     </Text>
             // </View>
-            <Loading name="Coupon" />
+            <Loading name="Coupon1" />
           ) : (
             items && (
               <MasonryList

@@ -138,9 +138,9 @@ export type SignUp = {
     name: string,
     email: string,
     password: string,
-    age: number | string,
-    gender: string,
-    address: string
+    // age: number | string,
+    // gender: string,
+    // address: string
 };
 export type User = {
     _id: string;

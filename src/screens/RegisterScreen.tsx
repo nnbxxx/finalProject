@@ -23,9 +23,9 @@ const RegisterScreen = () => {
     name: "",
     email: "",
     password: "",
-    age: "",
-    gender: "",
-    address: "",
+    // age: "",
+    // gender: "",
+    // address: "",
   });
   const handleChange = (field: string, value: string) => {
     setUser((prev) => ({ ...prev, [field]: value }));
@@ -41,8 +41,8 @@ const RegisterScreen = () => {
     }
 
     if (
-      user.address === "" ||
-      user.age === "" ||
+      // user.address === "" ||
+      // user.age === "" ||
       user.email === "" ||
       user.name === "" ||
       user.password === ""
@@ -53,7 +53,8 @@ const RegisterScreen = () => {
       });
       return;
     }
-    const res: any = await userSignup({ ...user, gender: checked });
+    const res: any = await userSignup({ ...user });
+    // const res: any = await userSignup({ ...user, gender: checked });
     if (res && res.data) {
       Toast.show({
         type: "success",
@@ -111,14 +112,14 @@ const RegisterScreen = () => {
             className="tracking-wider text-base"
           ></TextInput>
         </View>
-        <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
+        {/* <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
           <Text className="text-sm opacity-40">Address</Text>
           <TextInput
             value={user.address}
             onChangeText={(e) => handleChange("address", e)}
             className="tracking-wider text-base"
           ></TextInput>
-        </View>
+        </View> */}
         <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
           <Text className="text-sm opacity-40">Password</Text>
           <TextInput
@@ -129,7 +130,7 @@ const RegisterScreen = () => {
           ></TextInput>
         </View>
 
-        <View className="flex flex-row items-center justify-around w-full h-[60px]">
+        {/* <View className="flex flex-row items-center justify-around w-full h-[60px]">
           <View className="flex flex-row items-center">
             <RadioButton
               value="Male"
@@ -146,15 +147,15 @@ const RegisterScreen = () => {
             />
             <Text>Female</Text>
           </View>
-        </View>
-        <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
+        </View> */}
+        {/* <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
           <Text className="text-sm opacity-40">Age</Text>
           <TextInput
             value={user.age as any}
             onChangeText={(e) => handleChange("age", e)}
             className="tracking-wider text-base"
           ></TextInput>
-        </View>
+        </View> */}
         <View className="bg-main w-full py-4 rounded-[30px]">
           <TouchableOpacity onPress={handleSubmit}>
             <Text className="font-bold text-xl text-white text-center">

@@ -9,14 +9,19 @@ export const userLogin = (user: SignIn) => {
     })
 }
 export const userSignup = (user: SignUp) => {
-    const { name, email, password, age, gender, address } = user;
+    const { name, email, password } = user;
+    // const { name, email, password, age, gender, address } = user;
     return instance.post<any>("auth/register", {
-        name, email, password, age, gender, address
+        name, email, password,
     })
 }
 export const getUserInfo = (_id: string) => {
     return instance.get<IBackendRes<any>>(`users/${_id}`)
 }
+export const updateUserProfile = (data: any) => {
+    return instance.patch<IBackendRes<any>>(`users/profile`, data)
+}
+
 export const getAddressUserDefault = () => {
     return instance.get<IBackendRes<any>>(`address-user/user/default-address`)
 }
@@ -28,6 +33,9 @@ export const removeAddressUser = (id: string) => {
 }
 export const userLogout = () => {
     return instance.post<IBackendRes<string>>("auth/logout")
+}
+export const getProfileUser = () => {
+    return instance.get<IBackendRes<any>>(`auth/account`)
 }
 export const userRetryActive = (email: string) => {
     return instance.post<IBackendRes<any>>("auth/retry-active", { email });

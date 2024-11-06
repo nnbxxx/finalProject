@@ -34,7 +34,7 @@ const ProfileScreen = () => {
   const route = useRoute();
   const { profile } = route.params as RouteParams;
   const [infoUser, setInfoUser] = useState<any>(profile);
-
+  const [load, setLoad] = useState(false);
   const { height } = useWindowDimensions();
   const modifiedHeight = height + 36;
   const handleGetInfo = async () => {
@@ -64,8 +64,10 @@ const ProfileScreen = () => {
         type: "success",
         text1: "Logout Success",
       });
-      navigation.replace("Login");
       AsyncStorage.clear();
+      AsyncStorage.removeItem("token");
+      AsyncStorage.removeItem("user");
+      navigation.replace("Login");
     } else {
       const { message } = res as any;
       Toast.show({
@@ -146,7 +148,7 @@ const ProfileScreen = () => {
           </View>
         </View>
       </ScrollView>
-      <Navbar name="Profile" />
+      <Navbar name="Profile" load={load} />
     </SafeAreaView>
   );
 };

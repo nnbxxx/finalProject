@@ -31,7 +31,6 @@ const FavoriteScreen = () => {
     const re = (await callFetchListFavouriteProduct()) as any;
     if (re && re.data) {
       setItems(re.data.items);
-      
     }
   };
   useEffect(() => {
@@ -88,9 +87,8 @@ const FavoriteScreen = () => {
             />
           )}
         </View>
-        <Navbar name="Favorites" />
       </ScrollView>
-      <Navbar name="Favorites" />
+      <Navbar name="Favorites" load />
     </SafeAreaView>
   );
 };

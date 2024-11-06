@@ -54,7 +54,6 @@ const HomeScreen = () => {
   const [total, setTotal] = useState(0);
   const [keyword, setKeyword] = useState("");
   const [cartSize, setCartSize] = useState(0);
-
   useEffect(() => {
     const getProfile = async () => {
       const user = await AsyncStorage.getItem("user");
@@ -273,7 +272,7 @@ const HomeScreen = () => {
           </View>
         </View>
       </ScrollView>
-      <Navbar name="Home" />
+      <Navbar name="Home" load />
     </SafeAreaView>
   );
 };
