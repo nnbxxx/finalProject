@@ -25,9 +25,9 @@ import { HeartIcon } from "react-native-heroicons/outline";
 import { IProduct, RVariant, User } from "../types/type";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { imgProductDefault } from "../utils/imageDefault";
 import {
   addFavoriteProduct,
+  callFetchListProduct,
   callFetchProductById,
   checkFavoriteProduct,
   fetchCommentProduct,
@@ -43,6 +43,7 @@ import { HeartIcon as NoF } from "react-native-heroicons/outline";
 import { HeartIcon as F } from "react-native-heroicons/solid";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Confirm from "../components/Confirm";
+import Product from "../components/Product";
 type RouteParams = {
   id: string;
 };
@@ -50,6 +51,7 @@ type RouteParams = {
 const DetailScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const flatListRef = useAnimatedRef<FlatList<OnboardingData>>();
+  const [items, setItems] = useState<IProduct[]>();
   const x = useSharedValue(0);
   const flatListIndex = useSharedValue(0);
   const [form, setForm] = useState(false);
@@ -104,6 +106,18 @@ const DetailScreen = () => {
       }
     }
   };
+  const fetchListItems = async () => {
+    // lấy 10 sản phẩm gần đây nhất
+    const data: any = await callFetchListProduct(
+      "current=1&pageSize=10&sort=-createdAt"
+    );
+    // console.log("🚀 ~ fetchListItems ~ data:", data);
+    if (data && data.data) {
+      setItems(data.data.result);
+    } else {
+      // console.log("🚀 ~ fetchListItems ~ data:", data);
+    }
+  };
   const callFetchCommentProduct = async () => {
     const re = (await fetchCommentProduct(id)) as any;
     if (re && re.data) {
@@ -128,7 +142,7 @@ const DetailScreen = () => {
       "keyboardDidShow",
       handlePressOutside
     );
-
+    fetchListItems();
     return () => {
       keyboardDidShowListener.remove();
     };
@@ -236,10 +250,9 @@ const DetailScreen = () => {
             </View>
           </View>
         )}
-
-        <View className="absolute bottom-0 w-full mb-10">
+        <View className="absolute bottom-[450px] w-full mb-10">
           <View className="px-10 flex flex-row items-center">
-            <View className="bg-main flex-1 py-4 rounded-[30px] mr-7">
+            <View className="bg-main flex-1 py-4 rounded-[10px] mr-7">
               <TouchableOpacity onPress={() => setActive(true)}>
                 <Text className="font-bold text-xl text-white text-center">
                   Add To Cart
@@ -253,7 +266,30 @@ const DetailScreen = () => {
             )}
           </View>
         </View>
+        <View className="p-5">
+          <Text className="font-bold text-xl mb-4">Related Products</Text>
+          <View>
+            <FlatList
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingTop: 20, paddingLeft: 40 }}
+              data={items}
+              keyExtractor={(item: any, idx) => item._id + idx}
+              renderItem={({ item }) => (
+                <Product
+                  name="Home"
+                  key={item._id}
+                  item={item}
+                  user={profile?._id}
+                  setLoad={setLoad}
+                  load={load}
+                />
+              )}
+            />
+          </View>
+        </View>
       </ScrollView>
+
       {active && <Confirm id={id} item={item} user={profile?._id} />}
     </SafeAreaView>
   );

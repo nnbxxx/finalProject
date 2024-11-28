@@ -149,7 +149,8 @@ export type User = {
     gender: string;
     age: string;
     address: string;
-    avatar: string
+    avatar: string;
+    point?: string;
 };
 
 
@@ -289,6 +290,7 @@ export type upUser = {
 
 
 export type Comment = {
+    [x: string]: any;
     _id: string;
     user: {
         avatar: string,

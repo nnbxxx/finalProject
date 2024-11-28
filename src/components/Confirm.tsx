@@ -53,7 +53,7 @@ const Confirm = ({ id, item, user }: Props) => {
   };
 
   return (
-    <View className="absolute bottom-0 w-screen h-auto bg-white rounded-[30px] ">
+    <View className="absolute bottom-0 w-screen h-auto bg-white rounded-[10px] ">
       <View className="p-5">
         <View className="w-full border-b border-gray1 pb-[10px]">
           <Text className="text-center font-bold text-base">{item?.name}</Text>
@@ -69,7 +69,7 @@ const Confirm = ({ id, item, user }: Props) => {
               </Text>
             )}
           </View>
-          <View className="flex flex-row items-center justify-between w-[180px] h-10 rounded-[30px] border">
+          <View className="flex flex-row items-center justify-between w-[180px] h-10 rounded-[10px] border">
             <View className="flex-1">
               <TouchableOpacity onPress={handleDes}>
                 <Text className="font-bold text-xl text-center">-</Text>
@@ -90,7 +90,7 @@ const Confirm = ({ id, item, user }: Props) => {
         </View>
         <View className="px-5">
           <TouchableOpacity onPress={handleAddCart}>
-            <View className="w-full h-[60px] bg-main rounded-[30px] flex items-center justify-center">
+            <View className="w-full h-[60px] bg-main rounded-[10px] flex items-center justify-center">
               <Text className="text-white text-xl font-bold tracking-[4px]">
                 Confirm
               </Text>

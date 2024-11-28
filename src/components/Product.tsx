@@ -14,7 +14,6 @@ import { HeartIcon as F } from "react-native-heroicons/solid";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { imgProductDefault } from "../utils/imageDefault";
 import { IProduct } from "../types/type";
 import {
   addCartItemUser,
@@ -104,31 +103,33 @@ const Product = ({ name, item, user, setLoad, load }: any) => {
         key={item._id}
         className={`bg-white ${
           name === "Home" ? "w-[180px] mr-10" : `w-[170px]`
-        } h-[352px] rounded-[30px] relative`}
+        } h-[352px] rounded-[10px] relative`}
         onPress={() => navigation.navigate("Detail", { id: item._id })}
       >
         <Image
           source={{
-            uri: imgProductDefault.uri,
+            uri: item?.images[0],
           }}
           style={{
             width: name === "Home" ? 140 : 120,
             height: 180,
           }}
-          className={`rounded-[20px] absolute mt-[10px] ${
+          className={`rounded-[10px] absolute mt-[10px] ${
             name === "Home" ? "left-5" : "left-[15px]"
           }`}
         />
         <View className="mt-[210px] flex flex-col items-center justify-center">
           <Text className="font-bold">
-            {item.name.length > 20 ? item.name.slice(0, 20) + "..." : item.name}
+            {item?.name?.length > 20
+              ? item?.name.slice(0, 20) + "..."
+              : item?.name}
           </Text>
           <Text className="mt-[6px]">{item.brand}</Text>
           <Text className="text-money">${item.price}</Text>
           <View className="flex flex-row items-center justify-between mt-[10px] px-5">
             {name !== "Home" ? (
               <TouchableOpacity
-                className={`w-[100px] h-8 rounded-[36px] bg-main flex items-center justify-center ${
+                className={`w-[100px] h-8 rounded-[10px] bg-main flex items-center justify-center ${
                   name === "Home" ? "mr-5" : "mr-2"
                 }`}
                 onPress={handleAddCart}

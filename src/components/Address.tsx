@@ -11,7 +11,7 @@ const Address = ({ data, setAddress, type, setOpen }: Props) => {
   if (type === "Change") {
     return (
       <TouchableOpacity
-        className="px-5 py-[10px] rounded-[5px] bg-white border border-main mb-[10px]"
+        className="px-5 py-[10px] rounded-[10px] bg-white border border-main mb-[10px]"
         onPress={() => {
           setAddress(data);
           setOpen(false);
@@ -31,7 +31,7 @@ const Address = ({ data, setAddress, type, setOpen }: Props) => {
     );
   }
   return (
-    <View className="px-5 py-[10px] rounded-[5px] bg-white">
+    <View className="px-5 py-[10px] rounded-[10px] bg-white">
       <View className="w-full flex flex-row items-center justify-between pb-[10px] border-b border-gray1 mb-[10px]">
         <Text className="font-semibold">{data?.receiver}</Text>
         <Text>+{data?.phone}</Text>

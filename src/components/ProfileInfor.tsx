@@ -12,7 +12,7 @@ type Props = {
 };
 const ProfileInfo = ({ profile }: Props) => {
   return (
-    <View className="w-full h-[227px] flex flex-row items-end pt-[16px] pb-10 bg-white rounded-[20px]">
+    <View className="w-full h-[227px] flex flex-row items-end pt-[16px] pb-10 bg-white rounded-[10px]">
       <Image
         source={{ uri: profile.avatar }}
         style={{ width: 80, height: 80 }}
@@ -33,13 +33,16 @@ const ProfileInfo = ({ profile }: Props) => {
               Gender : {profile.gender}
             </Text>
           </View>
-          <View className="border-b w-full">
+          {/* <View className="border-b w-full">
             <Text className="text-center my-[10px]">
               Address: {profile.address}
             </Text>
-          </View>
+          </View> */}
           <View>
             <Text className="mt-[10px]">Age: {profile.age}</Text>
+          </View>
+          <View>
+            <Text className="mt-[10px]">Point: {profile.point}</Text>
           </View>
         </View>
       </View>

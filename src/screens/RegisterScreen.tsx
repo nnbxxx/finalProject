@@ -77,7 +77,7 @@ const RegisterScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false} className="bg-second">
       <View className="relative w-full h-[380px] bg-white rounded-b-[30px] flex flex-col justify-center items-center">
         <View>
-          <Text className="text-5xl text-main">Cloths</Text>
+          <Text className="text-5xl text-main">Sắc</Text>
           <Text className="text-5xl text-main">for Everyone</Text>
         </View>
         <View className=" absolute flex flex-row items-center justify-between bottom-0">
@@ -156,7 +156,7 @@ const RegisterScreen = () => {
             className="tracking-wider text-base"
           ></TextInput>
         </View> */}
-        <View className="bg-main w-full py-4 rounded-[30px]">
+        <View className="bg-main w-full py-4 rounded-[10px]">
           <TouchableOpacity onPress={handleSubmit}>
             <Text className="font-bold text-xl text-white text-center">
               Register

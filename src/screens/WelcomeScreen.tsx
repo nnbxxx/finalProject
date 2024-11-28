@@ -14,14 +14,14 @@ const WelcomeScreen = () => {
     <View style={styles.appScreen}>
       <Image
         style={styles.samsungGalaxyA145g1}
-        source={require("../../assets/backgroud.png")}
+        source={require("../../assets/backgroud.jpg")}
       />
       <Text style={[styles.version100b, styles.version100bFlexBox]}>
         Version: 1.0.0b
       </Text>
       <View style={styles.appScreenChild} />
       <Text style={[styles.portfolioQuang, styles.version100bFlexBox]}>
-        L'Officiel
+        Sắc
       </Text>
       <Image
         style={styles.appScreenItem}
@@ -75,11 +75,11 @@ const styles = StyleSheet.create({
   },
   portfolioQuang: {
     top: 452,
-    left: 135,
-    fontSize: 32,
+    left: 175,
+    fontSize: 40,
     fontWeight: "700",
     fontFamily: "Roboto",
-    color: "#014f0e",
+    color: "#fffff",
     width: 272,
     height: 47,
   },

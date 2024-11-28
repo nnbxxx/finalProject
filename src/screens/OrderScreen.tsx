@@ -42,8 +42,8 @@ const OrdersScreen = () => {
   const query = {
     unconfirm: "&statusUser=UNCONFIRMED&statusSupplier=UNCONFIRMED",
     confirm: "&statusUser=CONFIRMED&statusSupplier=CONFIRMED",
-    prepare: "&statusUser=CONFIRMED&statusSupplier=PREPARE",
-    onDelivery: "&statusUser=CONFIRMED&statusSupplier=ON_DELIVERY",
+    prepare: "&statusUser=PREPARE&statusSupplier=PREPARE",
+    onDelivery: "&statusUser=ON_DELIVERY&statusSupplier=ON_DELIVERY",
     delivered: "&statusUser=CONFIRMED&statusSupplier=DELIVERED",
     cancel: "&statusUser=CANCEL&statusSupplier=CANCEL",
   };
@@ -59,12 +59,12 @@ const OrdersScreen = () => {
     setForm(false);
   };
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      handlePressOutside
-    );
+    // const keyboardDidShowListener = Keyboard.addListener(
+    //   "keyboardDidShow",
+    //   handlePressOutside
+    // );
     return () => {
-      keyboardDidShowListener.remove();
+      //keyboardDidShowListener.remove();
     };
   }, []);
   const fetchListReceipt = async (query: string) => {

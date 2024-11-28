@@ -113,6 +113,7 @@ const CheckoutScreen = () => {
     //   } else setMoney(money - chooseCoupon.value);
     // }
     // fetch coupon
+    console.log("🚀 ~ CheckoutScreen ~ chooseCoupon:", chooseCoupon);
   }, [chooseCoupon]);
   const handleOrder = async () => {
     const itemCart = data.map((item) => {
@@ -125,7 +126,7 @@ const CheckoutScreen = () => {
         type: "error",
         text1: "Please Create Address",
       });
-      navigation.navigate("ManageAddress");
+      navigation.navigate("ManageAddress", { type: "Add" });
     } else {
       let data;
       if (!chooseCoupon) {
@@ -153,16 +154,16 @@ const CheckoutScreen = () => {
             ward: address?.wards,
             detail: address?.specific,
           },
-          coupon: [chooseCoupon.code],
+          coupons: [chooseCoupon.code],
         };
       }
-      const re = await checkoutReceipt(data);
+      const re = (await checkoutReceipt(data)) as any;
       if (re && re.data) {
         if (pay === "COD") {
           Toast.show({ type: "success", text1: "Order Success" });
           navigation.replace("Order", { id: user });
         } else {
-          Linking.openURL("https://www.google.com/");
+          Linking.openURL(re.data);
           Toast.show({ type: "success", text1: "Order Success" });
           navigation.replace("Order", { id: user });
         }
@@ -213,7 +214,7 @@ const CheckoutScreen = () => {
             </View>
 
             <Text className="w-full font-medium">Payment method</Text>
-            <View className="py-[10px] bg-white rounded-[20px] w-full flex flex-row items-center justify-around">
+            <View className="py-[10px] bg-white rounded-[10px] w-full flex flex-row items-center justify-around">
               <View className="flex flex-row items-center ">
                 <RadioButton
                   value="COD"
@@ -253,7 +254,7 @@ const CheckoutScreen = () => {
           <Text className="text-xl text-money">${money}</Text>
         </View>
         <TouchableOpacity
-          className="w-full h-[60px] bg-main rounded-[30px] flex items-center justify-center mb-5"
+          className="w-full h-[60px] bg-main rounded-[10px] flex items-center justify-center mb-5"
           onPress={handleOrder}
         >
           <Text className="font-bold text-xl text-white tracking-widest">

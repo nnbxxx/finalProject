@@ -31,7 +31,7 @@ const RecoveryPasswordScreen = () => {
             <TextInput secureTextEntry />
           </View>
         </View>
-        <View className="absolute bottom-0 w-full bg-main rounded-[30px]">
+        <View className="absolute bottom-0 w-full bg-main rounded-[10px]">
           <TouchableOpacity>
             <Text className="text-white text-xl font-bold tracking-widest">
               Change

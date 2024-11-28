@@ -58,7 +58,7 @@ const LoginScreen = () => {
     <ScrollView showsVerticalScrollIndicator={false} className="bg-second">
       <View className="relative w-full h-[380px] bg-white rounded-b-[30px] flex flex-col justify-center items-center">
         <View>
-          <Text className="text-5xl text-main">Cloths</Text>
+          <Text className="text-5xl text-main">Sắc</Text>
           <Text className="text-5xl text-main">for Everyone</Text>
         </View>
         <View className=" absolute flex flex-row items-center justify-between bottom-0">
@@ -78,7 +78,7 @@ const LoginScreen = () => {
       </View>
       <View className="flex gap-[30px] flex-col items-center justify-center px-[50px] mt-16">
         <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
-          <Text className="text-sm opacity-40">Username</Text>
+          <Text className="text-sm opacity-40">Email</Text>
           <TextInput
             onChangeText={(e) => handleChange("username", e)}
             className="tracking-wider text-base"
@@ -86,7 +86,7 @@ const LoginScreen = () => {
         </View>
         <View className="flex space-y-1 flex-col border-b-2 w-full h-[60px]">
           <Text className="text-sm opacity-40">Password</Text>
-          <TextInput
+          <TextInput  
             onChangeText={(e) => handleChange("password", e)}
             secureTextEntry
             className="tracking-wider text-base"
@@ -99,7 +99,7 @@ const LoginScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="bg-main w-full py-4 rounded-[30px]">
+        <View className="bg-main w-full py-4 rounded-[10px]">
           <TouchableOpacity onPress={handleSubmit}>
             <Text className="font-bold text-xl text-white text-center">
               Login

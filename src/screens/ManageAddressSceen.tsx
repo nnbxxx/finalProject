@@ -6,7 +6,7 @@ import { ArrowLeftIcon } from "react-native-heroicons/outline";
 import { Address } from "../types/type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native";
-
+import { Picker } from "@react-native-picker/picker";
 import Toast from "react-native-toast-message";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
@@ -14,10 +14,10 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import { callCreateNewUserAddress } from "../api/api";
+import { callCreateNewUserAddress, callGetListProvince } from "../api/api";
 
 type Params = {
-  type: string;
+  type?: string;
 };
 const ManageAddressScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -25,13 +25,21 @@ const ManageAddressScreen = () => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const route = useRoute();
   const { type } = route.params as Params;
+  const [provinces, setProvinces] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [dataQuery, setDataQuery] = useState({
+    districts: null,
+    province: null,
+    wards: null,
+  });
   const [address, setAddress] = useState({
     user: type === "Add" ? " " : "",
-    districts: "",
     phone: "",
-    province: "",
     receiver: "",
     specific: "",
+    districts: "",
+    province: "",
     wards: "",
   });
   const [userId, setUserId] = useState("");
@@ -40,14 +48,17 @@ const ManageAddressScreen = () => {
   const handleChange = (feild: string, value: string) => {
     setAddress((prev) => ({ ...prev, [feild]: value }));
   };
+  const handleChangeQuery = (feild: string, value: string) => {
+    setDataQuery((prev) => ({ ...prev, [feild]: value }));
+  };
 
   const handleCreate = async () => {
     const re = await callCreateNewUserAddress({
       user: userId,
       receiver: address.receiver,
       phone: address.phone,
-      province: address.province,
       districts: address.districts,
+      province: address.districts,
       wards: address.wards,
       specific: address.specific,
       isDefault: isSwitchOn,
@@ -73,9 +84,40 @@ const ManageAddressScreen = () => {
         setUserId(userObject._id);
       }
     };
+    const getProvince = async () => {
+      const re = (await callGetListProvince("/province")) as any;
+      if (re && re.data) {
+        setProvinces(re.data);
+      }
+    };
 
     getProfile();
+    getProvince();
   }, []);
+  const getDistrict = async (idProvince: string) => {
+    const re = (await callGetListProvince(
+      `/district?idProvince=${idProvince}`
+    )) as any;
+    if (re && re.data) {
+      setDistricts(re.data);
+    }
+  };
+  const getWards = async (idProvince: string, idDistrict: string) => {
+    const re = (await callGetListProvince(
+      `/ward?provinceId=${idProvince}&districtId=${idDistrict}`
+    )) as any;
+    if (re && re.data) {
+      setWards(re.data);
+    }
+  };
+  useEffect(() => {
+    if (dataQuery.province && address.province) {
+      getDistrict(dataQuery.province);
+      if (dataQuery.districts && address.districts) {
+        getWards(dataQuery.province, dataQuery.districts);
+      }
+    }
+  }, [dataQuery]);
   return (
     <SafeAreaView>
       <ScrollView
@@ -112,24 +154,66 @@ const ManageAddressScreen = () => {
           </View>
           <View className="pb-[5px] border-b">
             <Text className="text-gray1">Province / City</Text>
-            <TextInput
-              value={address.province}
-              onChangeText={(e) => handleChange("province", e)}
-            />
+
+            <Picker
+              selectedValue={provinces.find((p: any) => {
+                return p.Name === address.province;
+              })}
+              onValueChange={(itemValue: any) => {
+                handleChange("province", itemValue.Name);
+                handleChangeQuery("province", itemValue.Id);
+              }}
+              style={{ height: 50 }}
+            >
+              <Picker.Item label="Select a Province" value="" />
+              {provinces.map((province: any) => (
+                <Picker.Item
+                  key={province.id}
+                  label={province.Name}
+                  value={province}
+                />
+              ))}
+            </Picker>
           </View>
           <View className="pb-[5px] border-b">
             <Text className="text-gray1">District</Text>
-            <TextInput
-              value={address.districts}
-              onChangeText={(e) => handleChange("districts", e)}
-            />
+            <Picker
+              selectedValue={districts.find((p: any) => {
+                return p.Name === address.districts;
+              })}
+              onValueChange={(itemValue: any) => {
+                handleChange("districts", itemValue.Name);
+                handleChangeQuery("districts", itemValue.Id);
+              }}
+              style={{ height: 50 }}
+            >
+              <Picker.Item label="Select a District" value="" />
+              {districts.map((district: any) => (
+                <Picker.Item
+                  key={district.id}
+                  label={district.Name}
+                  value={district}
+                />
+              ))}
+            </Picker>
           </View>
           <View className="pb-[5px] border-b">
             <Text className="text-gray1">Wards</Text>
-            <TextInput
-              value={address.wards}
-              onChangeText={(e) => handleChange("wards", e)}
-            />
+            <Picker
+              selectedValue={wards.find((p: any) => {
+                return p.Name === address.wards;
+              })}
+              onValueChange={(itemValue: any) => {
+                handleChange("wards", itemValue.Name);
+                handleChangeQuery("wards", itemValue.Id);
+              }}
+              style={{ height: 50 }}
+            >
+              <Picker.Item label="Select a Ward" value="" />
+              {wards.map((ward: any) => (
+                <Picker.Item key={ward.id} label={ward.Name} value={ward} />
+              ))}
+            </Picker>
           </View>
           <View className="pb-[5px] border-b">
             <Text className="text-gray1">Specific</Text>
@@ -145,7 +229,7 @@ const ManageAddressScreen = () => {
         </View>
         <View className="w-full mt-[140px] mb-20">
           <TouchableOpacity
-            className="w-full h-[60px] px-[10px] rounded-[30px] bg-main flex items-center justify-center"
+            className="w-full h-[60px] px-[10px] rounded-[10px] bg-main flex items-center justify-center"
             onPress={handleCreate}
           >
             <Text className="font-bold text-xl tracking-widest text-white">

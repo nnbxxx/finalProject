@@ -12,7 +12,6 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { imgProductDefault } from "../utils/imageDefault";
 
 type Props = {
   index: number;
@@ -45,7 +44,7 @@ const Image = ({ index, x, item }: Props) => {
       className="p-[50px]"
     >
       <Animated.View style={lottieAnimationStyle}>
-        <I source={{ uri: imgProductDefault.uri }} style={[styles.image]} />
+        <I source={{ uri: item }} style={[styles.image]} />
       </Animated.View>
       {/* <Text style={[styles.itemText, { color: item.textColor }]}>{item.text}</Text> */}
     </View>

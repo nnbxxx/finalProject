@@ -1,71 +1,77 @@
-# Groceries FE REACT NATIVE
+# XÂY DỰNG ỨNG DỤNG THƯƠNG MẠI VỀ THỜI TRANG
 
-This repository contains the MOBILE FE for an online groceries shop built with Nest.js.
+Nhận thấy tầm quan trọng và ý nghĩa văn hóa của cổ phục Việt Nam, nhóm chúng em quyết định xây dựng một Ứng dụng Shop bán cổ phục Việt Nam. Ứng dụng không chỉ hướng đến việc cung cấp trải nghiệm mua sắm đơn giản, tiết kiệm thời gian cho người tiêu dùng mà còn giúp các cửa hàng kinh doanh cổ phục dễ dàng quản lý, lưu trữ thông tin và phát triển bền vững. Hơn nữa, ứng dụng còn góp phần lan tỏa và bảo tồn giá trị truyền thống thông qua việc đưa các sản phẩm cổ phục đến gần hơn với đông đảo người tiêu dùng hiện đại một cách tiện lợi trên thiết bị di động.
 
-## Sinh viên thực hiện
+## Nhóm phát triển
 
-| Tên                | MSSV     |
-| ------------------ | -------- |
-| Lê Minh Quang      | 21110279 |
-| Ngô Nguyên Bảo     | 21119170 |
+- **Ngô Nguyên Bảo** - 21119170
+- **Lê Minh Quang** - 21110270
 
+## Figma Design
 
-## Description
+Dưới đây là các màn hình chính của ứng dụng được thiết kế trên Figma:
 
-The Groceries Backend Nest.js is a server-side application developed with Nest.js to support the functionality of an online groceries shop. It utilizes Node.js along with Express for building the server and MongoDB for database management.
+### Màn hình đăng nhập và đăng ký
 
-## Technologies Used
+![Màn hình đăng nhập](./assets/figma/login.png)
+![Màn hình đăng ký](./assets/figma/resigster.png)
 
-- REACT.JS
+### Màn hình chính và danh sách sản phẩm
 
-## Features
+![Màn hình chính](./assets/figma/HomePage.png)
+![Màn hình danh sách sản phẩm tìm kiếm](./assets/figma/SearchPage.png)
 
-The backend server provides essential functionality for the online groceries shop, including:
+---
 
-- Managing product inventory
-- Processing user orders
-- Handling user authentication and authorization
-- Generating reports and analytics for business insights
+### Màn hình giỏ hàng
 
-This backend server serves as the core of the online groceries shop, facilitating communication between the frontend client applications and the database.
+## ![Màn hình Chi tiết giỏ hàng](./assets/figma/cart.png)
 
-## Installation
+### Màn hình thông tin sản phẩm
 
-1. **Clone the repository:**
+![Màn xem thông tin sản phẩm](./assets/figma/productinfo.png)
+![Màn xem đánh giá sản phẩm](./assets/figma/productReview.png)
 
-   ```bash
-   git clone https://github.com/nnbxxx/finalProject/
-   ```
+---
 
-2. **Navigate to the project directory:**
+### Thanh điều hướng
 
-   ```bash
-   cd FE-TLCN
-   ```
+## ![Thanh điều hướng](./assets/figma/navbar.png)
 
-3. **Install dependencies:**
+### Hồ sơ cá nhân
 
-   ```bash
-   npm install
-   ```
+![Hồ sơ cá nhân](./assets/figma/Profile.png)
+![Cật nhật thông tin cá nhân](./assets/figma/ChangeProfile.png)
 
-4. **Set up environment variables:**
+---
 
- ```bash
-   Setup file env
-    PORT=8800
-    FE_URI = 
+### Danh sách yêu thích
 
+![Danh sách yêu thích](./assets/figma/FavouriteList.png)
+![Danh sách yêu thích trống](./assets/figma/FavouriteListNotFound.png)
 
+---
 
-   ```
+### Danh sách hóa đơn
 
-5. **Run the server:**
+![Danh sách Hóa đơn](./assets/figma/OrderHistory.png)
+![Danh sách Hóa đơn trống](./assets/figma/OrderNotFound.png)
+![Chi tiết Hóa đơn](./assets/figma/OrderDetail.png)
 
-   ```bash
-   npm start
-   ```
+---
 
+### Danh sách địa chỉ
 
+![Danh sách Địa chỉ](./assets/figma/ManaggeListAddress.png)
+![Tạo mới địa chỉ](./assets/figma/CreateAddress.png)
+![Cật nhập và Chi tiết Địa chỉ](./assets/figma/UpdateAddress.png)
 
-```
+---
+
+### Các màn hình khác
+
+![Màn hình chào mừng](./assets/figma/welcome.png)
+
+Các màn hình này thể hiện giao diện người dùng chính của ứng dụng, bao gồm các chức năng đăng nhập, đăng ký, xem bài tập, thảo luận, quản lý hồ sơ và xem thống kê. Thiết kế tập trung vào tính đơn giản, dễ sử dụng và hiệu quả cho người dùng trên thiết bị di động.
+
+---

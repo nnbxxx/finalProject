@@ -1,5 +1,5 @@
 import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
-import React, { Children } from "react";
+import React, { Children, useEffect, useState } from "react";
 import {
   HeartIcon,
   PencilIcon,
@@ -12,7 +12,7 @@ import {
   SwipeProvider,
 } from "react-native-swipe-item";
 import { ICartItem } from "../types/type";
-import { imgProductDefault } from "../utils/imageDefault";
+import { callFetchImagesProductById } from "../api/api";
 
 type Props = {
   data: ICartItem;
@@ -22,6 +22,17 @@ type Props = {
 };
 
 const CartItem = ({ data, onCheckedItem, onRemoveItem, type }: Props) => {
+  const [uriImages, setUriImages] = useState([]);
+  const fetchImagesById = async () => {
+    const re: any = await callFetchImagesProductById(data.product);
+    if (re && re.data) {
+      setUriImages(re.data);
+    }
+  };
+  useEffect(() => {
+    fetchImagesById();
+    return () => {};
+  }, []);
   const rightButton = (
     <SwipeButtonsContainer
       style={{
@@ -59,9 +70,9 @@ const CartItem = ({ data, onCheckedItem, onRemoveItem, type }: Props) => {
                   onPress={onCheckedItem}
                 />
               </View>
-              <View className="flex flex-row items-center py-[10px] px-[50px] bg-white rounded-[5px]">
+              <View className="flex flex-row items-center py-[10px] px-[50px] bg-white rounded-[10px]">
                 <Image
-                  source={{ uri: imgProductDefault.uri }}
+                  source={{ uri: uriImages[0] }}
                   style={{ width: 80, height: 100 }}
                   borderRadius={5}
                 />
@@ -96,9 +107,9 @@ const CartItem = ({ data, onCheckedItem, onRemoveItem, type }: Props) => {
         </SwipeProvider>
       ) : (
         <View className="flex flex-row items-center mb-[10px]">
-          <View className="w-full flex flex-row items-center p-[10px] bg-white rounded-[5px]">
+          <View className="w-full flex flex-row items-center p-[10px] bg-white rounded-[10px]">
             <Image
-              source={{ uri: imgProductDefault.uri }}
+              source={{ uri: uriImages[0] }}
               style={{ width: 80, height: 100 }}
               borderRadius={5}
             />

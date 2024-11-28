@@ -172,7 +172,7 @@ const CartScreen = () => {
               </View>
             </View>
             <TouchableOpacity
-              className="w-full h-[60px] bg-main rounded-[30px] flex items-center justify-center"
+              className="w-full h-[60px] bg-main rounded-[10px] flex items-center justify-center"
               onPress={handleCheckout}
             >
               <Text className="font-bold text-xl text-white tracking-widest">

@@ -76,7 +76,7 @@ const ListAddressScreen = () => {
       <View className="absolute bottom-0 right-2 mb-2 flex flex-row">
         {active && (
           <TouchableOpacity onPress={handleSetDefault} className="mr-1">
-            <View className="w-full rounded-[30px] bg-main px-2">
+            <View className="w-full rounded-[10px] bg-main px-2">
               <Text className="text-white text-xl font-bold tracking-widest">
                 Save Change
               </Text>
@@ -86,7 +86,7 @@ const ListAddressScreen = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate("ManageAddress", { type: "Add" })}
         >
-          <View className="w-full rounded-[30px] bg-main px-2">
+          <View className="w-full rounded-[10px] bg-main px-2">
             <Text className="text-white text-xl font-bold tracking-widest">
               + New Address
             </Text>

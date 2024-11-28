@@ -63,6 +63,9 @@ export const callFetchListCategory = (query: string) => {
 export const callFetchProductById = (id: string) => {
     return instance.get<IBackendRes<IProduct>>(`products/${id}`);
 }
+export const callFetchImagesProductById = (id: string) => {
+    return instance.get<IBackendRes<any>>(`products/images/${id}`);
+}
 export const checkFavoriteProduct = (id: string) => {
     return instance.get<IBackendRes<any>>(`like-products/user/${id}`);
 }
@@ -73,7 +76,7 @@ export const removeFavoriteProduct = (id: string) => {
     return instance.delete<IBackendRes<any>>(`like-products/${id}`)
 }
 export const fetchCommentProduct = (id: string) => {
-    return instance.get<IBackendRes<any>>(`reviews?current=1&pageSize=1111&productId=${id}`);
+    return instance.get<IBackendRes<any>>(`reviews?current=1&pageSize=1111&populate=userId&productId=${id}`);
 }
 
 export const getCartByUser = () => {
@@ -99,7 +102,7 @@ export const activeCouponReceipt = (id: string, data: any) => {
 }
 
 export const callFetchListReceipt = (query: string) => {
-    return instance.get<IBackendRes<IModelPaginate<any>>>(`receipts?current=1&pageSize=999?${query}`);
+    return instance.get<IBackendRes<IModelPaginate<any>>>(`receipts/user?current=1&pageSize=999?${query}`);
 }
 export const getReceiptById = (id: string) => {
     return instance.get<IBackendRes<IOrder>>(`receipts/${id}`)
@@ -118,4 +121,8 @@ export const callFetchListUserAddress = (userId: string) => {
 
 export const callCreateNewReviewProduct = (data: any) => {
     return instance.post<IBackendRes<any>>(`reviews`, data);
+}
+
+export const callGetListProvince = (query: string = '') => {
+    return instance.get<IBackendRes<any>>(`address${query}`)
 }

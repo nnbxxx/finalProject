@@ -119,7 +119,7 @@ const OrderDetailScreen = () => {
           <View className="absolute bottom-0 w-full px-10 flex justify-end">
             <View className="flex flex-col items-center justify-center">
               <Text className="w-full font-medium">Payment method</Text>
-              <View className="py-[10px] bg-white rounded-[20px] w-full flex flex-row items-center justify-around">
+              <View className="py-[10px] bg-white rounded-[10px] w-full flex flex-row items-center justify-around">
                 <View className="flex flex-row items-center ">
                   <RadioButton
                     value="COD"
@@ -146,7 +146,7 @@ const OrderDetailScreen = () => {
                 <Text className="text-xl text-money">#{order?.total}</Text>
               </View>
               <TouchableOpacity
-                className="w-full h-[60px] bg-main rounded-[30px] flex items-center justify-center mb-5"
+                className="w-full h-[60px] bg-main rounded-[10px] flex items-center justify-center mb-5"
                 onPress={handleReturnReceipt}
               >
                 <Text className="font-bold text-xl text-white tracking-widest">

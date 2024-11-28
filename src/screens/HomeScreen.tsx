@@ -144,7 +144,7 @@ const HomeScreen = () => {
         <View className="pt-[50px]">
           <View className="flex flex-row justify-between items-center px-[50px]">
             <View>
-              <Text className="text-main text-3xl">Cloths</Text>
+              <Text className="text-main text-3xl">Sắc</Text>
               <Text className="text-main text-3xl">For Everyone</Text>
             </View>
             <View>

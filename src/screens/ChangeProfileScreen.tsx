@@ -40,7 +40,7 @@ const ChangeProfileScreen = () => {
   });
 
   const [image, setImage] = useState(avtDefault.uri);
-  const [checked, setChecked] = useState<string>("Female");
+  const [checked, setChecked] = useState<string>("FEMALE");
   const handleChange = (field: string, value: string) => {
     setUser((prev: any) => ({ ...prev, [field]: value }));
   };
@@ -132,7 +132,7 @@ const ChangeProfileScreen = () => {
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleUpload}>
-            <View className="px-[60px] h-[50px] w-full bg-main rounded-[30px] flex justify-center">
+            <View className="px-[60px] h-[50px] w-full bg-main rounded-[10px] flex justify-center">
               <Text className="font-bold tracking-widest text-white">
                 Upoad Avatar
               </Text>
@@ -157,19 +157,19 @@ const ChangeProfileScreen = () => {
             <View className="flex flex-row items-center justify-around w-full h-[60px]">
               <View className="flex flex-row items-center">
                 <RadioButton
-                  value="Male"
-                  status={checked === "Male" ? "checked" : "unchecked"}
-                  onPress={() => setChecked("Male")}
+                  value="MALE"
+                  status={checked === "MALE" ? "checked" : "unchecked"}
+                  onPress={() => setChecked("MALE")}
                 />
-                <Text>Male</Text>
+                <Text>MALE</Text>
               </View>
               <View className="flex flex-row items-center">
                 <RadioButton
-                  value="Female"
-                  status={checked === "Female" ? "checked" : "unchecked"}
-                  onPress={() => setChecked("Female")}
+                  value="FEMALE"
+                  status={checked === "FEMALE" ? "checked" : "unchecked"}
+                  onPress={() => setChecked("FEMALE")}
                 />
-                <Text>Female</Text>
+                <Text>FEMALE</Text>
               </View>
             </View>
           </View>
@@ -180,7 +180,7 @@ const ChangeProfileScreen = () => {
           onPress={handleUpdate}
           className="w-full flex justify-center items-center"
         >
-          <View className="bg-main py-4 rounded-[30px] px-[50px] w-[314px]">
+          <View className="bg-main py-4 rounded-[10px] px-[50px] w-[314px]">
             <Text className="font-bold text-xl text-white text-center">
               Change
             </Text>

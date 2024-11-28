@@ -1,9 +1,11 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ICartItem, IOrder, RECEIPT_STATUS } from "../types/type";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { imgProductDefault } from "../utils/imageDefault";
+import { callFetchImagesProductById } from "../api/api";
+
 type Props = {
   item: IOrder;
   setForm: Dispatch<SetStateAction<boolean>>;
@@ -12,26 +14,51 @@ type Props = {
 
 const Order = ({ item, setForm, setProduct }: Props) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const [uriImages, setUriImages] = useState<string[]>([]);
+
+  // Lấy idP từ sản phẩm đầu tiên trong danh sách
+  const idP = item.items?.[0]?.product;
+
+  // Hàm fetch hình ảnh theo id sản phẩm
+  const fetchImagesById = async (id: string) => {
+    if (!id) return;
+    try {
+      const re: any = await callFetchImagesProductById(id);
+      if (re && re.data) {
+        setUriImages(re.data);
+      }
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
+  // Gọi fetch hình ảnh khi idP thay đổi
+  useEffect(() => {
+    fetchImagesById(idP || "");
+  }, [idP]);
+
   const handleClick = (item: ICartItem) => {
     setForm(true);
     setProduct(item);
   };
+
   return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("OrderDetail", { id: item._id, user: item.user })
       }
     >
-      <View className="p-[10px] bg-white rounded-[5px] mb-[10px]">
+      <View className="p-[10px] bg-white rounded-[10px] mb-[10px]">
         {item.items &&
           item.items.map((order, i) => (
             <View
+              key={i}
               className={`flex flex-row items-center gap-[10px] pb-[10px] border-b border-gray1 ${
-                i >= 1 ? "mt-[10px] " : "mt-[5px]"
+                i >= 1 ? "mt-[10px]" : "mt-[5px]"
               }`}
             >
               <Image
-                source={{ uri: imgProductDefault.uri }}
+                source={{ uri: uriImages[0] }}
                 style={{
                   width: 80,
                   height: 80,
